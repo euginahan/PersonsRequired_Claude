@@ -1954,50 +1954,222 @@ body {
 
 /* ── Accessibility Mode Overrides ────────────────────────── */
 
-.a11y--large-text .helper-panel,
-.a11y--large-text .summary-card__text,
-.a11y--large-text .checklist-item__text,
-.a11y--large-text .chat-bubble,
-.a11y--large-text .walkthrough-bar__instruction {
-  font-size: 16px !important;
-}
+/*
+  Font size: zoom scales ALL content inside the panel uniformly —
+  every px value, border, icon, and layout unit scales together
+  without needing to enumerate individual selectors.
+*/
+.a11y--large-text .helper-panel { zoom: 1.18; }
+.a11y--xl-text    .helper-panel { zoom: 1.35; }
 
-.a11y--large-text .summary-card__label,
-.a11y--large-text .checklist-action-btn,
-.a11y--large-text .date-btn {
-  font-size: 13px !important;
-}
+/*
+  High contrast: comprehensive dark panel theme.
+  Every surface, text element, and interactive control is covered.
+*/
 
-.a11y--xl-text .helper-panel,
-.a11y--xl-text .summary-card__text,
-.a11y--xl-text .checklist-item__text,
-.a11y--xl-text .chat-bubble,
-.a11y--xl-text .walkthrough-bar__instruction {
-  font-size: 18px !important;
-}
-
+/* Panel shell */
 .a11y--high-contrast .helper-panel {
-  background: #000 !important;
+  background: #0d0d0d !important;
 }
-.a11y--high-contrast .summary-card,
-.a11y--high-contrast .action-checklist,
-.a11y--high-contrast .expand-section {
-  background: #111 !important;
+.a11y--high-contrast .helper-panel__body {
+  background: #0d0d0d !important;
+}
+
+/* Navigation: language bar + tabs */
+.a11y--high-contrast .helper-panel__lang-bar {
+  background: #000 !important;
+  border-bottom: 1px solid rgba(255,255,255,0.3) !important;
+}
+.a11y--high-contrast .lang-btn {
+  color: #ccc !important;
+  border-color: rgba(255,255,255,0.25) !important;
+  background: rgba(255,255,255,0.06) !important;
+}
+.a11y--high-contrast .lang-btn--active {
+  background: #fff !important;
+  color: #000 !important;
   border-color: #fff !important;
+}
+.a11y--high-contrast .helper-panel__tabs {
+  background: #111 !important;
+  border-bottom-color: rgba(255,255,255,0.25) !important;
+}
+.a11y--high-contrast .tab-btn {
+  color: #aaa !important;
+}
+.a11y--high-contrast .tab-btn--active {
+  color: #fff !important;
+  border-bottom-color: #fff !important;
+}
+
+/* All cards and containers */
+.a11y--high-contrast .summary-card,
+.a11y--high-contrast .status-card,
+.a11y--high-contrast .date-card,
+.a11y--high-contrast .action-checklist,
+.a11y--high-contrast .checklist-item,
+.a11y--high-contrast .expand-section,
+.a11y--high-contrast .safety-verdict,
+.a11y--high-contrast .rc-card,
+.a11y--high-contrast .chat-view__presets,
+.a11y--high-contrast .chat-view__greeting,
+.a11y--high-contrast .glossary-item__body,
+.a11y--high-contrast .glossary-item__term,
+.a11y--high-contrast .case-step,
+.a11y--high-contrast .ignore-verdict {
+  background: #1c1c1c !important;
+  border-color: rgba(255,255,255,0.3) !important;
+  box-shadow: none !important;
+}
+
+/* All body text */
+.a11y--high-contrast .summary-card__text,
+.a11y--high-contrast .summary-card__label,
+.a11y--high-contrast .summary-card__list-item,
+.a11y--high-contrast .summary-card__step,
+.a11y--high-contrast .status-card__action,
+.a11y--high-contrast .status-card__deadline,
+.a11y--high-contrast .checklist-item__text,
+.a11y--high-contrast .checklist-item__exp-text,
+.a11y--high-contrast .checklist-item__why,
+.a11y--high-contrast .date-card__meaning,
+.a11y--high-contrast .date-card__date,
+.a11y--high-contrast .date-card__suggested,
+.a11y--high-contrast .date-card__ask-answer,
+.a11y--high-contrast .safety-verdict__result,
+.a11y--high-contrast .safety-verdict__explanation,
+.a11y--high-contrast .safety-meta__val,
+.a11y--high-contrast .safety-meta__key,
+.a11y--high-contrast .finding-item,
+.a11y--high-contrast .glossary-item__def,
+.a11y--high-contrast .glossary-item__context,
+.a11y--high-contrast .case-name,
+.a11y--high-contrast .case-section-label,
+.a11y--high-contrast .case-email__subject,
+.a11y--high-contrast .case-email__meta,
+.a11y--high-contrast .case-step,
+.a11y--high-contrast .ignore-detail__section,
+.a11y--high-contrast .rc-card__title,
+.a11y--high-contrast .rc-group__label,
+.a11y--high-contrast .rc-card__source,
+.a11y--high-contrast .rc-header__title,
+.a11y--high-contrast .expand-section__toggle,
+.a11y--high-contrast .reply-view__draft-text,
+.a11y--high-contrast .summary-card__text--secondary {
+  color: #fff !important;
+}
+
+/* Muted/secondary text — slightly dimmer but still readable */
+.a11y--high-contrast .summary-card__label,
+.a11y--high-contrast .checklist-item__why,
+.a11y--high-contrast .date-card__suggested,
+.a11y--high-contrast .case-section-label,
+.a11y--high-contrast .rc-group__label,
+.a11y--high-contrast .safety-meta__key {
+  color: #bbb !important;
+}
+
+/* Chat */
+.a11y--high-contrast .chat-bubble--assistant {
+  background: #1c1c1c !important;
   color: #fff !important;
   box-shadow: none !important;
 }
-.a11y--high-contrast .summary-card__text,
-.a11y--high-contrast .checklist-item__text,
-.a11y--high-contrast .date-card__meaning {
+.a11y--high-contrast .chat-bubble--user {
+  background: #1a4a8a !important;
   color: #fff !important;
 }
-.a11y--high-contrast .summary-card__label { color: #ccc !important; }
-.a11y--high-contrast .chat-bubble--assistant {
-  background: #111 !important;
+.a11y--high-contrast .chat-preset-btn,
+.a11y--high-contrast .chat-chip {
+  background: #1c1c1c !important;
+  border-color: rgba(255,255,255,0.3) !important;
+  color: #fff !important;
+}
+.a11y--high-contrast .chat-preset-btn:hover,
+.a11y--high-contrast .chat-chip:hover {
+  background: #2a2a2a !important;
+  border-color: #fff !important;
+}
+.a11y--high-contrast .chat-view__greeting p,
+.a11y--high-contrast .chat-view__presets-label {
   color: #fff !important;
 }
 
+/* Buttons and interactive controls */
+.a11y--high-contrast .checklist-item__checkbox {
+  border-color: #fff !important;
+}
+.a11y--high-contrast .checklist-item__checkbox--checked {
+  background: #fff !important;
+  color: #000 !important;
+}
+.a11y--high-contrast .checklist-action-btn {
+  border-color: rgba(255,255,255,0.4) !important;
+  color: #fff !important;
+}
+.a11y--high-contrast .date-btn {
+  color: #fff !important;
+  border-color: rgba(255,255,255,0.4) !important;
+}
+.a11y--high-contrast .date-btn--set {
+  background: rgba(255,255,255,0.1) !important;
+}
+.a11y--high-contrast .walkthrough-start-btn {
+  border-color: #fff !important;
+  color: #fff !important;
+}
+.a11y--high-contrast .walkthrough-start-btn--active {
+  background: #fff !important;
+  color: #000 !important;
+}
+.a11y--high-contrast .rc-filter-btn {
+  background: #222 !important;
+  color: #ccc !important;
+}
+.a11y--high-contrast .rc-filter-btn--active {
+  background: #fff !important;
+  color: #000 !important;
+  border-color: #fff !important;
+}
+.a11y--high-contrast .rc-action-btn {
+  border-color: rgba(255,255,255,0.4) !important;
+  color: #fff !important;
+}
+.a11y--high-contrast .rc-header__close {
+  color: #fff !important;
+}
+.a11y--high-contrast .reply-draft__textarea {
+  background: #111 !important;
+  color: #fff !important;
+  border-color: rgba(255,255,255,0.4) !important;
+}
+.a11y--high-contrast .reply-opt-btn {
+  background: #1c1c1c !important;
+  border-color: rgba(255,255,255,0.3) !important;
+  color: #fff !important;
+}
+.a11y--high-contrast .reply-opt-btn--selected {
+  background: #fff !important;
+  color: #000 !important;
+}
+.a11y--high-contrast .case-email {
+  background: #1c1c1c !important;
+  border-color: rgba(255,255,255,0.3) !important;
+}
+.a11y--high-contrast .case-email--current {
+  background: #1a2a4a !important;
+  border-color: #6af !important;
+}
+.a11y--high-contrast .dates-empty {
+  background: #1c1c1c !important;
+  color: #fff !important;
+}
+.a11y--high-contrast .rc-completed-toggle {
+  border-color: rgba(255,255,255,0.3) !important;
+  color: #bbb !important;
+}
+
+/* Reduce motion */
 .a11y--reduce-motion * {
   animation: none !important;
   transition: none !important;
