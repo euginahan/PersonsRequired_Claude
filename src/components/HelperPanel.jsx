@@ -46,7 +46,7 @@ export default function HelperPanel({
     <div className="helper-panel">
 
       {/* Header */}
-      <div className="helper-panel__header">
+      <div className="helper-panel__header" style={{ position: 'relative', zIndex: 2 }}>
         <div className="helper-panel__title">
           <span className="helper-panel__title-icon">🇰🇷</span>
           이메일 도우미
@@ -70,6 +70,27 @@ export default function HelperPanel({
           <button className="helper-panel__icon-action" onClick={onClose} title="닫기" aria-label="닫기">✕</button>
         </div>
       </div>
+
+      {/* Escalation overlay — covers everything below header regardless of scroll */}
+      {escalationOpen && (
+        <EscalationOverlay
+          step={currentStep}
+          mode={escalationMode}
+          language={language}
+          onChoice={onEscalationChoice}
+          onReturn={onEscalationReturn}
+          onExit={onExitWalkthrough}
+          onAddReminder={() => onAddReminder({
+            title: { korean: '운전면허 갱신', english: "Driver's License Renewal" },
+            dueDate: null,
+            dueDateLabel: { korean: '날짜 미정', english: 'No date set' },
+            urgency: 'high',
+            category: 'renewal',
+            emailSubject: "Quick Reminder: Your Driver's License will expire soon!",
+            walkthroughId: 'renew-license',
+          })}
+        />
+      )}
 
       {/* Reminder Center view */}
       {reminderCenterOpen ? (
@@ -112,8 +133,8 @@ export default function HelperPanel({
             ))}
           </div>
 
-          {/* Panel body — relative so escalation overlay can be absolute inside */}
-          <div className="helper-panel__body" style={{ position: 'relative' }}>
+          {/* Panel body */}
+          <div className="helper-panel__body">
             {activeTab === 'summary' && (
               <SummaryView
                 analysis={analysis}
@@ -142,27 +163,6 @@ export default function HelperPanel({
                 language={language}
                 chatHistory={chatHistory}
                 onSelect={onChatSelect}
-              />
-            )}
-
-            {/* Escalation overlay — sits on top of body content */}
-            {escalationOpen && (
-              <EscalationOverlay
-                step={currentStep}
-                mode={escalationMode}
-                language={language}
-                onChoice={onEscalationChoice}
-                onReturn={onEscalationReturn}
-                onExit={onExitWalkthrough}
-                onAddReminder={() => onAddReminder({
-                  title: { korean: '운전면허 갱신', english: "Driver's License Renewal" },
-                  dueDate: null,
-                  dueDateLabel: { korean: '날짜 미정', english: 'No date set' },
-                  urgency: 'high',
-                  category: 'renewal',
-                  emailSubject: "Quick Reminder: Your Driver's License will expire soon!",
-                  walkthroughId: 'renew-license',
-                })}
               />
             )}
           </div>

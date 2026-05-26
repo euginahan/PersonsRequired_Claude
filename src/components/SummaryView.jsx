@@ -7,7 +7,7 @@ import { getText } from './StatusCard'
 
 export default function SummaryView({
   analysis, classifier, checklist, dates, glossary, caseData,
-  language, simplified, onGuide, onStartWalkthrough, walkthroughId,
+  language, simplified, onGuide, onStartWalkthrough, onAddReminder, walkthroughId,
 }) {
   const summary = getText(analysis.summary, language)
   const isKorean = language === 'korean' || language === 'bilingual'
@@ -59,7 +59,7 @@ export default function SummaryView({
       />
 
       {/* Detected dates — compact inline in summary */}
-      <DatesPanel dates={dates} language={language} />
+      <DatesPanel dates={dates} language={language} onAddReminder={onAddReminder} />
 
       {/* Warnings */}
       {!simplified && (

@@ -557,6 +557,7 @@ body {
   flex-direction: column;
   height: 100%;
   background: #f8f9fe;
+  position: relative;
 }
 
 .helper-panel__header {
@@ -2160,9 +2161,12 @@ body {
 
 .esc-overlay {
   position: absolute;
-  inset: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 52px; /* clears the panel header */
   background: rgba(15, 23, 42, 0.92);
-  z-index: 200;
+  z-index: 10;
   display: flex;
   align-items: stretch;
   border-radius: 0 0 10px 10px;
