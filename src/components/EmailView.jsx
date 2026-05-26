@@ -1,10 +1,4 @@
-function Icon({ name, size = 20 }) {
-  return (
-    <span className="material-symbols-outlined" style={{ fontSize: size }}>
-      {name}
-    </span>
-  )
-}
+import { GIcon } from './GmailIcons'
 
 export default function EmailView({ email, isPanelOpen, onHelp }) {
   return (
@@ -14,37 +8,37 @@ export default function EmailView({ email, isPanelOpen, onHelp }) {
       <div className="ev-toolbar">
         <div className="ev-toolbar__left">
           <button className="gc-icon-btn" title="Back to Inbox">
-            <Icon name="arrow_back" />
+            <GIcon name="back" />
           </button>
           <button className="gc-icon-btn" title="Archive">
-            <Icon name="archive" />
+            <GIcon name="archive" />
           </button>
           <button className="gc-icon-btn" title="Report spam">
-            <Icon name="report" />
+            <GIcon name="report" />
           </button>
           <button className="gc-icon-btn" title="Delete">
-            <Icon name="delete" />
+            <GIcon name="delete" />
           </button>
           <button className="gc-icon-btn" title="Mark as unread">
-            <Icon name="mark_email_unread" />
+            <GIcon name="unread" />
           </button>
           <button className="gc-icon-btn" title="Snooze">
-            <Icon name="schedule" />
+            <GIcon name="schedule" />
           </button>
           <div className="ev-toolbar__divider" />
           <button className="gc-icon-btn" title="Move to">
-            <Icon name="drive_file_move" />
+            <GIcon name="move" />
           </button>
           <button className="gc-icon-btn" title="Labels">
-            <Icon name="label" />
+            <GIcon name="label" />
           </button>
           <button className="gc-icon-btn" title="More">
-            <Icon name="more_vert" />
+            <GIcon name="more_v" />
           </button>
         </div>
 
         <div className="ev-toolbar__right">
-          {/* Extension-injected help button lives in the toolbar */}
+          {/* Extension-injected help button */}
           <button
             className={`help-btn${isPanelOpen ? ' help-btn--active' : ''}`}
             onClick={onHelp}
@@ -57,10 +51,10 @@ export default function EmailView({ email, isPanelOpen, onHelp }) {
           <div className="ev-toolbar__divider" />
           <span className="ev-toolbar__count">1 of 247</span>
           <button className="gc-icon-btn" title="Older">
-            <Icon name="chevron_left" />
+            <GIcon name="chevron_l" />
           </button>
           <button className="gc-icon-btn" title="Newer">
-            <Icon name="chevron_right" />
+            <GIcon name="chevron_r" />
           </button>
         </div>
       </div>
@@ -69,7 +63,7 @@ export default function EmailView({ email, isPanelOpen, onHelp }) {
       <div className="ev-subject-row">
         <h1 className="ev-subject">{email.subject}</h1>
         <button className="gc-icon-btn ev-print-btn" title="Print all">
-          <Icon name="print" />
+          <GIcon name="print" />
         </button>
       </div>
 
@@ -88,7 +82,7 @@ export default function EmailView({ email, isPanelOpen, onHelp }) {
             <div className="ev-recipient-line">
               to me
               <button className="ev-expand-btn" aria-label="Show details">
-                <Icon name="arrow_drop_down" size={18} />
+                <GIcon name="drop_down" size={18} />
               </button>
             </div>
           </div>
@@ -96,14 +90,13 @@ export default function EmailView({ email, isPanelOpen, onHelp }) {
           <div className="ev-msg-header-right">
             <span className="ev-msg-date">{email.date}</span>
             <button className="gc-icon-btn" title="Star">
-              <Icon name="star_border" />
+              <GIcon name="star_off" />
             </button>
             <button className="gc-icon-btn" title="Reply">
-              <Icon name="reply" />
+              <GIcon name="reply" />
             </button>
-            {/* Gmail's per-message ⋮ menu (contains Forward among other options) */}
             <button className="gc-icon-btn" title="More">
-              <Icon name="more_vert" />
+              <GIcon name="more_v" />
             </button>
           </div>
         </div>
@@ -121,21 +114,21 @@ export default function EmailView({ email, isPanelOpen, onHelp }) {
           ))}
         </div>
 
-        {/* ── Bottom reply/forward actions (exactly like Gmail) ── */}
+        {/* Bottom reply / forward actions */}
         <div className="ev-msg-actions">
           <button className="ev-action-btn">
-            <Icon name="reply" size={18} />
+            <GIcon name="reply" size={18} />
             Reply
           </button>
           <button className="ev-action-btn">
-            <Icon name="reply_all" size={18} />
+            <GIcon name="reply_all" size={18} />
             Reply all
           </button>
           <button
             className="ev-action-btn"
             data-guide-id="email-forward-btn"
           >
-            <Icon name="forward" size={18} />
+            <GIcon name="forward" size={18} />
             Forward
           </button>
         </div>
