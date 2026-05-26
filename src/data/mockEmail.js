@@ -428,6 +428,31 @@ export const walkthroughs = {
           english: 'Find the dds.drives.ga.gov link in the email. It is highlighted in blue.',
         },
         confirm: { korean: '링크를 찾았어요', english: 'I found the link' },
+        simplified: {
+          korean: '이메일 중간에 파란 글씨 링크를 찾으세요.',
+          english: 'Look for blue underlined text in the middle of the email.',
+        },
+        reassurance: {
+          action: {
+            korean: '이 링크를 클릭하면 DDS 공식 웹사이트가 새 탭에서 열려요. 이메일은 그대로 남아요.',
+            english: 'Clicking this link opens the official DDS website in a new tab. Your email stays open.',
+          },
+          reversible: {
+            korean: '새 탭을 닫으면 이 이메일로 돌아올 수 있어요.',
+            english: 'You can close the new tab to return here at any time.',
+          },
+          safe: true,
+        },
+        context: {
+          plain: {
+            korean: '이 링크는 조지아 주 공식 운전면허 갱신 웹사이트로 연결돼요. 사기 링크가 아니에요.',
+            english: 'This link goes to the official Georgia license renewal website. It is not a scam link.',
+          },
+          why: {
+            korean: '이 사이트에서 집에서 온라인으로 갱신할 수 있어요. 직접 방문하지 않아도 돼요.',
+            english: 'This is where you renew your license online from home, without visiting an office.',
+          },
+        },
       },
       {
         id: 'w2',
@@ -437,6 +462,31 @@ export const walkthroughs = {
           english: 'Clicking the link opens the DDS website. Look for the "Online Services" button.',
         },
         confirm: { korean: '웹사이트에 도착했어요', english: 'I reached the website' },
+        simplified: {
+          korean: '웹사이트에 들어가면 "Online Services" 글씨를 찾으세요.',
+          english: 'On the website, look for the words "Online Services".',
+        },
+        reassurance: {
+          action: {
+            korean: '"Online Services" 버튼을 클릭해도 아무것도 신청되지 않아요. 메뉴만 열려요.',
+            english: 'Clicking "Online Services" does not apply for anything. It just opens a menu.',
+          },
+          reversible: {
+            korean: '브라우저의 뒤로가기 버튼을 누르면 언제든 돌아갈 수 있어요.',
+            english: 'You can press the browser back button to go back at any time.',
+          },
+          safe: true,
+        },
+        context: {
+          plain: {
+            korean: 'DDS 웹사이트 첫 페이지에 "Online Services"라는 메뉴가 있어요. 거기서 갱신을 시작할 수 있어요.',
+            english: 'The DDS homepage has an "Online Services" section. That is where you begin the renewal.',
+          },
+          why: {
+            korean: '온라인 서비스 메뉴를 통해야 운전면허 갱신 페이지로 이동할 수 있어요.',
+            english: 'You need to go through Online Services to reach the license renewal page.',
+          },
+        },
       },
       {
         id: 'w3',
@@ -446,6 +496,31 @@ export const walkthroughs = {
           english: 'Select the "Renew" or "Driver\'s License Renewal" option.',
         },
         confirm: { korean: '갱신 옵션을 찾았어요', english: 'I found the renewal option' },
+        simplified: {
+          korean: '"Renew" 또는 "갱신"이라고 적힌 항목을 찾아 클릭하세요.',
+          english: 'Find and click the item that says "Renew" or "Renewal".',
+        },
+        reassurance: {
+          action: {
+            korean: '이 항목을 선택하면 갱신 신청 양식이 열려요. 아직 아무것도 제출되지 않아요.',
+            english: 'Selecting this opens a renewal form. Nothing is submitted yet.',
+          },
+          reversible: {
+            korean: '양식을 작성하지 않고 닫으면 아무런 변경 사항도 없어요.',
+            english: 'If you close the form without filling it out, nothing changes.',
+          },
+          safe: true,
+        },
+        context: {
+          plain: {
+            korean: '"Renew" 항목을 클릭하면 이름, 주소 등을 입력하는 양식이 열려요.',
+            english: 'Clicking "Renew" opens a form where you fill in your name, address, and other details.',
+          },
+          why: {
+            korean: '이 단계가 실제 갱신 신청을 시작하는 곳이에요.',
+            english: 'This is the step that officially starts your renewal application.',
+          },
+        },
       },
       {
         id: 'w4',
@@ -455,6 +530,31 @@ export const walkthroughs = {
           english: 'Enter your personal information and pay $32. A credit or debit card is needed.',
         },
         confirm: { korean: '결제를 완료했어요', english: 'I completed the payment' },
+        simplified: {
+          korean: '정보를 입력하고 카드로 $32를 결제하면 끝이에요.',
+          english: 'Fill in your details and pay $32 by card. That is all.',
+        },
+        reassurance: {
+          action: {
+            korean: '결제 정보를 입력하고 확인 버튼을 누르면 $32가 청구돼요. 8년짜리 새 면허증을 받을 수 있어요.',
+            english: 'Entering your card details and confirming charges $32. You\'ll receive a new 8-year license.',
+          },
+          reversible: {
+            korean: '결제 전에 모든 정보를 꼭 확인하세요. 결제 후에는 취소하기 어려울 수 있어요.',
+            english: 'Please double-check everything before paying. It may be hard to cancel after payment.',
+          },
+          safe: true,
+        },
+        context: {
+          plain: {
+            korean: '신용카드나 직불카드로 $32를 납부하면 갱신이 완료돼요. 새 면허증이 우편으로 올 수도 있어요.',
+            english: 'Paying $32 by card completes your renewal. A new license may arrive by mail.',
+          },
+          why: {
+            korean: '$32는 8년 동안 유효한 새 면허증 발급 비용이에요.',
+            english: 'The $32 fee covers your new license, which is valid for 8 years.',
+          },
+        },
       },
     ],
   },

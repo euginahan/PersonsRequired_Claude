@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-export default function GuideOverlay({ targetId, label, onDismiss }) {
+export default function GuideOverlay({ targetId, label, onDismiss, enhanced = false }) {
   const [rect, setRect] = useState(null)
 
   useEffect(() => {
@@ -8,40 +8,57 @@ export default function GuideOverlay({ targetId, label, onDismiss }) {
 
     const el = document.querySelector(`[data-guide-id="${targetId}"]`)
     if (el) {
-      // Scroll element into view first, then measure
       el.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
       setTimeout(() => setRect(el.getBoundingClientRect()), 80)
     }
 
-    const timer = setTimeout(onDismiss, 6000)
-    return () => clearTimeout(timer)
-  }, [targetId, onDismiss])
+    // Enhanced mode: no auto-dismiss so user can take more time
+    if (!enhanced) {
+      const timer = setTimeout(onDismiss, 6000)
+      return () => clearTimeout(timer)
+    }
+  }, [targetId, onDismiss, enhanced])
 
   if (!rect || !targetId) return null
 
-  const pad = 8
+  const pad = enhanced ? 14 : 8
   const spaceBelow = window.innerHeight - rect.bottom
-  const tooltipAbove = spaceBelow < 80
+  const tooltipAbove = spaceBelow < 100
+
+  // Arrow positioned above the element, bouncing downward
+  const arrowLeft = rect.left + rect.width / 2 - 14
+  const arrowTop  = rect.top - pad - 44
 
   return (
     <div className="guide-root" onClick={onDismiss} role="presentation">
-      {/* Spotlight: box-shadow creates the dim effect around the highlighted element */}
+      {/* Spotlight */}
       <div
-        className="guide-highlight"
+        className={`guide-highlight${enhanced ? ' guide-highlight--enhanced' : ''}`}
         style={{
-          top: rect.top - pad,
-          left: rect.left - pad,
-          width: rect.width + pad * 2,
+          top:    rect.top  - pad,
+          left:   rect.left - pad,
+          width:  rect.width  + pad * 2,
           height: rect.height + pad * 2,
         }}
       />
 
-      {/* Tooltip with step instructions */}
+      {/* Bouncing arrow in enhanced mode */}
+      {enhanced && arrowTop > 0 && (
+        <div
+          className="guide-arrow"
+          style={{ top: arrowTop, left: arrowLeft }}
+          aria-hidden="true"
+        >
+          ▼
+        </div>
+      )}
+
+      {/* Tooltip */}
       <div
-        className="guide-tooltip"
+        className={`guide-tooltip${enhanced ? ' guide-tooltip--enhanced' : ''}`}
         style={{
-          top: tooltipAbove ? rect.top - pad - 8 : rect.bottom + pad + 8,
-          left: Math.min(Math.max(rect.left, 12), window.innerWidth - 220),
+          top:       tooltipAbove ? rect.top - pad - 8 : rect.bottom + pad + 8,
+          left:      Math.min(Math.max(rect.left, 12), window.innerWidth - 240),
           transform: tooltipAbove ? 'translateY(-100%)' : 'none',
         }}
         onClick={e => { e.stopPropagation(); onDismiss() }}
