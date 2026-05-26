@@ -1,17 +1,27 @@
-function getText(item, language) {
-  if (language === 'english') return { primary: item.english, secondary: null }
-  if (language === 'korean') return { primary: item.korean, secondary: null }
-  return { primary: item.korean, secondary: item.english }
-}
+import StatusCard from './StatusCard'
+import ActionChecklist from './ActionChecklist'
+import DatesPanel from './DatesPanel'
+import GlossarySection from './GlossarySection'
+import CaseSection from './CaseSection'
+import { getText } from './StatusCard'
 
-export default function SummaryView({ analysis, language }) {
+export default function SummaryView({
+  analysis, classifier, checklist, dates, glossary, caseData,
+  language, simplified, onGuide, onStartWalkthrough, walkthroughId,
+}) {
   const summary = getText(analysis.summary, language)
+  const isKorean = language === 'korean' || language === 'bilingual'
 
   return (
     <div className="summary-view">
+
+      {/* Email type classifier card — always at top */}
+      <StatusCard classifier={classifier} language={language} />
+
+      {/* What is this email */}
       <div className="summary-card summary-card--blue">
         <div className="summary-card__label">
-          {language === 'english' ? 'What is this email?' : '이 이메일은 무엇인가요?'}
+          {isKorean ? '이 이메일은 무엇인가요?' : 'What is this email?'}
         </div>
         <p className="summary-card__text">{summary.primary}</p>
         {summary.secondary && (
@@ -19,59 +29,62 @@ export default function SummaryView({ analysis, language }) {
         )}
       </div>
 
-      <div className="summary-card">
-        <div className="summary-card__label">
-          {language === 'english' ? '🔑 Key Details' : '🔑 중요한 내용'}
+      {/* Key details — hidden in simplified view */}
+      {!simplified && (
+        <div className="summary-card">
+          <div className="summary-card__label">
+            {isKorean ? '🔑 중요한 내용' : '🔑 Key Details'}
+          </div>
+          <ul className="summary-card__list">
+            {analysis.keyDetails.map((item, i) => {
+              const t = getText(item, language)
+              return (
+                <li key={i} className="summary-card__list-item">
+                  <span>{t.primary}</span>
+                  {t.secondary && <span className="summary-card__text--secondary"> — {t.secondary}</span>}
+                </li>
+              )
+            })}
+          </ul>
         </div>
-        <ul className="summary-card__list">
-          {analysis.keyDetails.map((item, i) => {
-            const t = getText(item, language)
-            return (
-              <li key={i} className="summary-card__list-item">
-                <span>{t.primary}</span>
-                {t.secondary && <span className="summary-card__text--secondary"> — {t.secondary}</span>}
-              </li>
-            )
-          })}
-        </ul>
-      </div>
+      )}
 
-      <div className="summary-card summary-card--steps">
-        <div className="summary-card__label">
-          {language === 'english' ? '✅ What to Do Next' : '✅ 다음에 해야 할 일'}
-        </div>
-        <ol className="summary-card__steps">
-          {analysis.nextSteps.map((item, i) => {
-            const t = getText(item, language)
-            return (
-              <li key={i} className="summary-card__step">
-                <span className="summary-card__step-num">{i + 1}</span>
-                <span>
+      {/* Interactive action checklist */}
+      <ActionChecklist
+        checklist={checklist}
+        language={language}
+        onGuide={onGuide}
+        onStartWalkthrough={onStartWalkthrough}
+        walkthroughId={walkthroughId}
+      />
+
+      {/* Detected dates — compact inline in summary */}
+      <DatesPanel dates={dates} language={language} />
+
+      {/* Warnings */}
+      {!simplified && (
+        <div className="summary-card summary-card--warning">
+          <div className="summary-card__label">
+            {isKorean ? '⚠️ 주의할 점' : '⚠️ Important Warnings'}
+          </div>
+          <ul className="summary-card__list">
+            {analysis.warnings.map((item, i) => {
+              const t = getText(item, language)
+              return (
+                <li key={i} className="summary-card__list-item">
                   {t.primary}
-                  {t.secondary && <span className="summary-card__text--secondary"><br />{t.secondary}</span>}
-                </span>
-              </li>
-            )
-          })}
-        </ol>
-      </div>
-
-      <div className="summary-card summary-card--warning">
-        <div className="summary-card__label">
-          {language === 'english' ? '⚠️ Important Warnings' : '⚠️ 주의할 점'}
+                  {t.secondary && <span className="summary-card__text--secondary"> — {t.secondary}</span>}
+                </li>
+              )
+            })}
+          </ul>
         </div>
-        <ul className="summary-card__list">
-          {analysis.warnings.map((item, i) => {
-            const t = getText(item, language)
-            return (
-              <li key={i} className="summary-card__list-item">
-                {t.primary}
-                {t.secondary && <span className="summary-card__text--secondary"> — {t.secondary}</span>}
-              </li>
-            )
-          })}
-        </ul>
-      </div>
+      )}
+
+      {/* Expandable sections */}
+      <GlossarySection glossary={glossary} language={language} />
+      <CaseSection caseData={caseData} language={language} />
+
     </div>
   )
 }
