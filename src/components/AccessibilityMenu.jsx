@@ -1,17 +1,120 @@
 import { useState, useRef, useEffect } from 'react'
 
+const READ_SELECTORS = [
+  '.status-card__action',
+  '.summary-card__text',
+  '.summary-card__list-item',
+  '.checklist-item__text',
+  '.date-card__meaning',
+  '.walkthrough-bar__instruction',
+  '.safety-verdict__result',
+  '.safety-verdict__explanation',
+  '.esc-mode-text',
+]
+
 export default function AccessibilityMenu({ settings, onChange, language }) {
-  const [open, setOpen] = useState(false)
-  const ref = useRef(null)
+  const [open, setOpen]           = useState(false)
+  const [readState, setReadState] = useState('idle') // 'idle' | 'reading' | 'paused'
+  const menuRef      = useRef(null)
+  const highlightRef = useRef(null)
+  const isActiveRef  = useRef(false)
   const isKorean = language === 'korean' || language === 'bilingual'
 
+  // Close dropdown on outside click
   useEffect(() => {
     function handleClick(e) {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false)
+      if (menuRef.current && !menuRef.current.contains(e.target)) setOpen(false)
     }
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
+
+  // Cancel speech on unmount
+  useEffect(() => {
+    return () => {
+      isActiveRef.current = false
+      window.speechSynthesis?.cancel()
+      clearHighlight()
+    }
+  }, [])
+
+  function clearHighlight() {
+    if (highlightRef.current) {
+      highlightRef.current.classList.remove('read-aloud-highlight')
+      highlightRef.current = null
+    }
+  }
+
+  function highlightEl(el) {
+    clearHighlight()
+    if (!el) return
+    el.classList.add('read-aloud-highlight')
+    el.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+    highlightRef.current = el
+  }
+
+  function gatherReadables() {
+    const seen  = new Set()
+    const items = []
+    READ_SELECTORS.forEach(sel => {
+      document.querySelectorAll(sel).forEach(el => {
+        if (seen.has(el)) return
+        seen.add(el)
+        const text = el.textContent?.trim()
+        if (text && text.length > 2) items.push({ el, text })
+      })
+    })
+    return items
+  }
+
+  function startReading() {
+    if (!('speechSynthesis' in window)) return
+    window.speechSynthesis.cancel()
+
+    const items = gatherReadables()
+    if (!items.length) return
+
+    isActiveRef.current = true
+    setReadState('reading')
+    let idx = 0
+
+    function speakNext() {
+      if (!isActiveRef.current) return
+      if (idx >= items.length) {
+        clearHighlight()
+        setReadState('idle')
+        return
+      }
+      const { el, text } = items[idx]
+      highlightEl(el)
+
+      const utt   = new SpeechSynthesisUtterance(text)
+      utt.lang    = language === 'korean' ? 'ko-KR' : 'en-US'
+      utt.rate    = 0.9
+      utt.onend   = () => { idx++; speakNext() }
+      utt.onerror = () => { idx++; speakNext() }
+      window.speechSynthesis.speak(utt)
+    }
+
+    speakNext()
+  }
+
+  function pauseReading() {
+    window.speechSynthesis.pause()
+    setReadState('paused')
+  }
+
+  function resumeReading() {
+    window.speechSynthesis.resume()
+    setReadState('reading')
+  }
+
+  function stopReading() {
+    isActiveRef.current = false
+    window.speechSynthesis.cancel()
+    clearHighlight()
+    setReadState('idle')
+  }
 
   function toggle(key) {
     onChange({ ...settings, [key]: !settings[key] })
@@ -21,15 +124,17 @@ export default function AccessibilityMenu({ settings, onChange, language }) {
     onChange({ ...settings, fontSize: size })
   }
 
+  const isReading = readState !== 'idle'
+
   return (
-    <div className="a11y-menu" ref={ref}>
+    <div className="a11y-menu" ref={menuRef}>
       <button
-        className={`a11y-toggle${open ? ' a11y-toggle--open' : ''}`}
+        className={`a11y-toggle${open ? ' a11y-toggle--open' : ''}${isReading ? ' a11y-toggle--reading' : ''}`}
         onClick={() => setOpen(v => !v)}
         title={isKorean ? '접근성 설정' : 'Accessibility settings'}
         aria-label={isKorean ? '접근성 설정' : 'Accessibility settings'}
       >
-        ⚙
+        {isReading ? '🔊' : '⚙'}
       </button>
 
       {open && (
@@ -93,23 +198,35 @@ export default function AccessibilityMenu({ settings, onChange, language }) {
             </button>
           </label>
 
-          {/* Read aloud */}
-          <button
-            className="a11y-read-btn"
-            onClick={() => {
-              const text = isKorean
-                ? document.querySelector('.summary-card__text')?.textContent ?? ''
-                : document.querySelector('.summary-card__text')?.textContent ?? ''
-              if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel()
-                const utt = new SpeechSynthesisUtterance(text)
-                utt.lang = language === 'korean' ? 'ko-KR' : 'en-US'
-                window.speechSynthesis.speak(utt)
-              }
-            }}
-          >
-            🔊 {isKorean ? '소리로 읽기' : 'Read aloud'}
-          </button>
+          {/* Read aloud — idle: start button | active: controls */}
+          {readState === 'idle' ? (
+            <button className="a11y-read-btn" onClick={startReading}>
+              🔊 {isKorean ? '소리로 읽기' : 'Read aloud'}
+            </button>
+          ) : (
+            <div className="a11y-read-controls">
+              <div className="a11y-read-controls__status">
+                <span className={`a11y-read-controls__dot${readState === 'reading' ? ' a11y-read-controls__dot--active' : ''}`} />
+                {isKorean
+                  ? (readState === 'paused' ? '⏸ 일시정지됨' : '🔊 읽는 중...')
+                  : (readState === 'paused' ? '⏸ Paused' : '🔊 Reading...')}
+              </div>
+              <div className="a11y-read-controls__btns">
+                {readState === 'reading' ? (
+                  <button className="a11y-read-ctrl-btn" onClick={pauseReading}>
+                    ⏸ {isKorean ? '일시정지' : 'Pause'}
+                  </button>
+                ) : (
+                  <button className="a11y-read-ctrl-btn" onClick={resumeReading}>
+                    ▶ {isKorean ? '재개' : 'Resume'}
+                  </button>
+                )}
+                <button className="a11y-read-ctrl-btn a11y-read-ctrl-btn--stop" onClick={stopReading}>
+                  ⏹ {isKorean ? '중지' : 'Stop'}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

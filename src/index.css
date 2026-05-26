@@ -1927,6 +1927,78 @@ body {
 }
 .a11y-read-btn:hover { background: #e8f0fe; border-color: #4A7FC1; }
 
+/* Read-aloud controls (shown while reading/paused) */
+.a11y-read-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 2px 0;
+}
+
+.a11y-read-controls__status {
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Noto Sans KR', system-ui, sans-serif;
+  color: #4A7FC1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.a11y-read-controls__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #80868b;
+  flex-shrink: 0;
+  display: inline-block;
+}
+.a11y-read-controls__dot--active {
+  background: #34A853;
+  animation: dot-pulse 1s ease-in-out infinite;
+}
+
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+.a11y-read-controls__btns {
+  display: flex;
+  gap: 5px;
+}
+
+.a11y-read-ctrl-btn {
+  flex: 1;
+  background: #e8f0fe;
+  border: 1px solid #a8c7fa;
+  border-radius: 7px;
+  padding: 6px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Noto Sans KR', system-ui, sans-serif;
+  color: #1a73e8;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.a11y-read-ctrl-btn:hover { background: #d2e3fc; }
+
+.a11y-read-ctrl-btn--stop {
+  background: #fce8e6;
+  border-color: #f5c6c3;
+  color: #c5221f;
+}
+.a11y-read-ctrl-btn--stop:hover { background: #fad2cf; }
+
+/* Settings gear pulses amber while reading is active */
+.a11y-toggle--reading {
+  animation: reading-pulse 1.5s ease-in-out infinite;
+}
+@keyframes reading-pulse {
+  0%, 100% { background: rgba(251,191,36,0.15); }
+  50%       { background: rgba(251,191,36,0.45); }
+}
+
 /* ── Chat Chips (redesigned) ─────────────────────────────── */
 
 .chat-chips {
@@ -2173,6 +2245,16 @@ body {
 .a11y--reduce-motion * {
   animation: none !important;
   transition: none !important;
+}
+
+/* ── Read aloud highlight ────────────────────────────────── */
+
+.read-aloud-highlight {
+  background: rgba(253, 224, 71, 0.4) !important;
+  outline: 2px solid rgba(234, 179, 8, 0.75) !important;
+  outline-offset: 3px !important;
+  border-radius: 4px !important;
+  transition: background 0.2s, outline 0.2s;
 }
 
 /* ── Bell button (panel header) ─────────────────────────── */
