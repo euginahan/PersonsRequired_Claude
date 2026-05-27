@@ -10,7 +10,14 @@ SCAD · Spring 2026 · Due May 27, 2026
 
 My mom receives important emails about bills, permits, franchise logistics, documents, and official notices, but because of language barriers and low tech confidence, she struggles to understand what the email is asking her to do. She often calls me to translate, explain next steps, forward attachments, or help her write a simple reply.
 
-This project is a web-based prototype of a Gmail helper tool that turns confusing email content into a clear Korean summary, action steps, and simple reply support — meeting her inside the email context instead of asking her to learn a new system.
+This project turns that confusion into a clear Korean summary, action steps, deadline reminders, safety checks, and a guided walkthrough that runs on top of the email she already has open. It meets her *inside* her existing inbox instead of asking her to learn a new system.
+
+The final deliverable ships in **two paired forms**:
+
+1. **A web-based simulation** — a Vite + React app hosted on GitHub Pages, used for First Contact testing because she could open a URL on her own laptop without installing anything.
+2. **A real Chrome extension** (manifest v3) — built after the simulation validated the interaction model, this is what she actually uses on her real Gmail inbox. The extension reads the live email DOM (subject, sender, body) and renders the same panel feature-for-feature, with reminders that persist across sessions.
+
+Both share the same classifier, the same bilingual data model, and the same UI grammar so the experience she validated in testing is the experience she gets in production.
 
 **The Person**
 My mom is a first-generation Korean immigrant who helps my dad manage franchise-related logistics. Some emails she receives are high-stakes and time-sensitive: permits, bills, forms, renewals, document requests, official notices. She is not very comfortable with technology and often faces language barriers when reading emails in English. I am usually the person she calls when she doesn't understand an email.
@@ -22,7 +29,7 @@ My mom can sometimes translate individual words, but she struggles to understand
 She calls or texts me. Sometimes she uses Google Translate, but that only gives her words — not purpose or next steps. She also asks me to help with simple actions like forwarding attachments or drafting a short reply.
 
 **What "Helped" Looks Like**
-She opens an important email, reads the Korean summary, identifies the next step, and acts on it without calling me first.
+She opens an important email on her own laptop. The extension classifies it, surfaces the Korean summary and the action steps, lets her set a real-dated reminder, and walks her through the renewal/payment/appointment task one step at a time. She closes the tab without calling me. The very first time she did exactly this in testing — Georgia DDS renewal email, set a reminder, didn't ask me to translate — is the moment that defines what this project succeeded at.
 
 **Why I'm Building This**
 I am the person she calls. I have direct access to the problem, I understand where it breaks down, and I speak both languages. I also know how she reads: she skims, she trusts simple language, and she shuts down when something looks complicated.
@@ -30,12 +37,13 @@ I am the person she calls. I have direct access to the problem, I understand whe
 **Non-Negotiables**
 - The tool must feel simple and non-intimidating
 - It must not require copy and paste
-- It must work inside the email context
+- It must work inside the email context (i.e., on top of Gmail itself, not as a separate app)
 - It must explain next steps, not just translate
 - Korean must be the primary support language
 - The interface must avoid technical language
 - It must make her feel more confident, not dependent on another complicated tool
 - The first screen must be very clear and not overloaded
+- Reminders must always have a real *when* attached, not a generic "saved" state
 
 **What This Project Is Not**
 - Not a generic translation app
@@ -191,90 +199,165 @@ A lot of the final design decisions came directly from these observations — es
 
 ## Platform Rationale
 
-**Why a web app (Chrome extension-style simulation), not a standalone app:**
+The problem happens **inside email**. A separate translation app would mean copy-paste, context-switch, and another tool to learn — three things that already kill mom's follow-through. The right platform is one that lives directly on top of Gmail, the way Grammarly lives on top of whatever text editor you're already in.
 
-The problem happens inside email. A separate app would require her to copy and paste text into another tool, which adds steps, friction, and a context switch she would not reliably make. The correct answer is a tool that lives directly on top of the email — similar to how Grammarly appears while writing.
+The project ships in two paired platform forms, in deliberate order:
 
-**Current build:** A Vite + React web app hosted on GitHub Pages that simulates the Gmail + helper panel experience. This allows the prototype to be shared as a URL for First Contact testing without requiring a Chrome extension install.
+### Phase 1, the simulation (built first, used for First Contact testing)
 
-**Planned next step:** Convert to an actual Chrome extension (manifest.json + content script) after field testing validates the interaction model. The component architecture was written to make this migration clean — the UI is self-contained and does not depend on the full-page web app structure.
+A Vite + React web app hosted on GitHub Pages that simulates the Gmail UI and renders the helper panel as a draggable, resizable, minimizable floating window on top of it. The simulation uses static mock data (a real DDS Georgia driver's license renewal email) so I could put a working URL in front of mom on her own laptop in Session 16 *without* asking her to install anything, grant any permissions, or trust a Chrome extension I made.
 
-**Why not a mobile app:**
-She reads emails on her phone but the problem of understanding and deciding what to do next is not a mobile-only problem — it happens whenever she opens email. A URL that works on both desktop and mobile is faster to test and faster to iterate. A native app would require installation, app store submission, and a longer feedback loop.
+This isn't a placeholder — it's the test harness. The whole point of the simulation is that it lets me validate the interaction model (does the bilingual summary land? does the walkthrough reduce hesitation? does the reminder picker get used?) before I write a single line of Gmail DOM-scraping code. Field-testing UX *and* code reliability at the same time would have made it impossible to know whether a failure was a design problem or a Gmail-selector bug.
 
-**Why not a Discord or Slack bot:**
-The problem lives in email. Moving the solution to a different platform introduces more steps, not fewer.
+**Live URL:** https://euginahan.github.io/PersonsRequired_Claude/
+
+### Phase 2, the real Chrome extension (built second, what mom actually uses)
+
+After First Contact and the iteration round, I built the actual deliverable: a real Chrome extension (`manifest_v3`) that injects the same panel into live `mail.google.com`. The extension reads the real Gmail DOM — `h2.hP` for the subject, `.gD[email]` for the sender, `.a3s.aiL` / `.aXjCH` for the body — runs the same classifier as the simulation, and renders the same UI feature-for-feature. Reminders persist across browser sessions in `localStorage`. Panel position and size also persist so she never has to re-place the window.
+
+This is the version actually in mom's hands. It's loaded as an unpacked extension on her Chrome (`chrome://extensions → Load unpacked → /extension`) and works on her actual inbox emails — not a mock. The brief reads *"It must be in the hands of the person you designed it for"* — and "it" has to mean a tool that works on her *real* email, not a simulation she has to imagine onto her inbox.
+
+### Why these two forms specifically, and not just one
+
+Going simulation-first, extension-second turned out to be the right sequencing decision in retrospect. Going extension-only would have meant testing UX and Gmail-DOM reliability at the same time, with no way to share a URL. Going simulation-only would have meant the case study evidence stopped at "she liked the demo" instead of "she used it on her real Gmail and stopped calling me." The project specifically needed both. The simulation is the URL submission for First Contact; the extension is the artifact in her hands for the actual case study evidence.
+
+### What I rejected, and why
+
+**Mobile app** — she reads email on both phone and laptop, but the "what do I do now" problem isn't mobile-specific. A native iOS app would have meant app store submission, longer feedback loops, and a separate codebase. A responsive web app + extension covers both surfaces with one codebase.
+
+**Standalone translation app** — Google Translate already gives her words. Words aren't her problem. She needs purpose and next steps, which requires the email *in context*, not a chat window where she pastes English in and gets Korean out.
+
+**Discord / Slack / WhatsApp bot** — moving the solution to a different platform than the problem adds steps instead of removing them. Every existing workaround she has (screenshot to me, leave the tab open, ask later) is already a context-switch tax. Adding another one is the opposite of help.
+
+**Physical kiosk / installation** — the problem is private and recurring; an installation is public and one-time. Doesn't fit.
 
 ---
 
-## System Architecture
+## System Architecture Diagram (Mermaid)
 
-The project ships in **two parallel forms** that share the same UI grammar:
-1. **Simulation** — a Vite/React app on GitHub Pages, used for First Contact testing.
-2. **Chrome Extension** — a real `manifest_v3` content script that injects the same panel into live Gmail and reads the actual open email.
+> *Required deliverable per the brief: "Mermaid Diagram — Full system architecture. What receives input, how the system processes it, what it outputs."*
+
+The project ships in **two parallel forms** that share the same classifier, the same bilingual data model, and the same UI grammar:
+
+1. **Simulation** — a Vite + React app on GitHub Pages, used for First Contact testing. Reads static mock data from `src/data/mockEmail.js`.
+2. **Chrome Extension** — a real `manifest_v3` content script that injects the same panel into live `mail.google.com` and reads the actual open email from the Gmail DOM.
+
+Both pipelines enter the same classifier (`analyze()`), pass through the same enrichment layer (`enrichAnalysis()`), and render the same panel — only the *input source* differs (mock data vs live DOM) and the rendering surface (React components vs vanilla DOM in the extension).
+
+### The diagram
 
 ```mermaid
 flowchart TD
-  subgraph INPUT[Input Layer]
-    A1[Simulation: mockEmail.js<br/>static DDS renewal email]
-    A2[Extension: live Gmail DOM<br/>subject · sender · body]
+
+  %% ─── INPUT LAYER ───
+  subgraph INPUT[" INPUT — what the system receives "]
+    direction TB
+    A1[Simulation path<br/>mockEmail.js<br/>static DDS renewal data]
+    A2[Extension path<br/>live Gmail DOM<br/>h2.hP · .gD email · .a3s.aiL]
   end
 
-  A1 --> CL[Email Classifier<br/>analyze type · urgency · safety]
+  %% ─── PROCESSING LAYER ───
+  subgraph PROCESS[" PROCESSING — how the system thinks "]
+    direction TB
+    CL[analyze subject sender body<br/>routes to type-specific analyzer:<br/>DDS · Bill · Appt · Delivery · Generic]
+    ENR[enrichAnalysis<br/>adds classifier meta priority deadline risk<br/>caseData · walkthrough confirm labels<br/>glossary emailContext]
+    STATE[Panel State Object<br/>language · tab · walkthrough · reminders<br/>a11y · pos · size · pickers]
+    PERSIST[(localStorage<br/>doumi_reminders<br/>doumi_pos · doumi_size)]
+    CL --> ENR --> STATE
+    STATE <-.-> PERSIST
+  end
+
+  A1 --> CL
   A2 --> CL
 
-  CL --> ENR[enrichAnalysis<br/>adds StatusCard meta · caseData<br/>walkthrough confirm labels · glossary context]
+  %% ─── OUTPUT LAYER ───
+  subgraph OUTPUT[" OUTPUT — what the user sees "]
+    direction TB
+    PANEL{Floating Panel<br/>drag · 8 resize handles<br/>minimize to pill}
+    LANG[Language Resolver t getText<br/>한국어 · English · 둘 다 · 쉬운 English]
+    PANEL --> LANG
 
-  ENR --> PANEL{Floating Panel<br/>drag · resize · minimize}
+    LANG --> T1[Summary Tab]
+    LANG --> T2[Safety Tab]
+    LANG --> T3[Reply Tab]
+    LANG --> T4[Ask Tab]
 
-  PANEL --> LANG[Language layer<br/>한국어 · English · 둘 다 · 쉬운 English]
+    T1 --> S1[Status Card<br/>icon · priority · deadline · risk]
+    T1 --> S2[Summary Card<br/>what this email is]
+    T1 --> S3[Key Details list]
+    T1 --> S4[Action Checklist<br/>Show me where · Why?<br/>Save email as reminder]
+    T1 --> S5[Dates Panel<br/>inline picker:<br/>Tomorrow · Next week · custom]
+    T1 --> S6[Warnings]
+    T1 --> S7[Glossary<br/>per-term expand · email context]
+    T1 --> S8[Case Memory<br/>related emails · progress]
 
-  LANG --> T1[Tab: Summary]
-  LANG --> T2[Tab: Safety]
-  LANG --> T3[Tab: Reply]
-  LANG --> T4[Tab: Ask]
+    T2 --> SAF[Safety Verdict<br/>findings · what if I ignore]
+    T3 --> REP[Reply Helper<br/>template chips · textarea · copy]
+    T4 --> CHAT[Chat Presets<br/>Q+A bubbles · scroll history]
 
-  T1 --> S1[StatusCard<br/>icon · priority · deadline · risk]
-  T1 --> S2[Summary card]
-  T1 --> S3[Key Details]
-  T1 --> S4[Action Checklist<br/>Show me where · Why?<br/>Save as reminder]
-  T1 --> S5[Dates Panel<br/>inline picker:<br/>Tomorrow · Next week · custom]
-  T1 --> S6[Warnings]
-  T1 --> S7[Glossary<br/>per-term expand + email context]
-  T1 --> S8[Case Memory<br/>related emails · progress]
+    A11Y[Accessibility Menu<br/>text size · high contrast<br/>simplified view · read-aloud TTS]
+    PANEL --> A11Y
+  end
 
-  T2 --> SAF[Safety verdict<br/>findings · what if I ignore]
-  T3 --> REP[Template chips<br/>editable textarea · copy]
-  T4 --> CHAT[Preset chips<br/>Q+A bubbles]
+  STATE --> PANEL
 
+  %% ─── INTERACTIVE OVERLAYS ───
   S4 -.->|Start guide| WT[Walkthrough Bar<br/>step counter · slow mode<br/>back · pause · confirm]
-  WT --> GUIDE[Guide Overlay<br/>spotlight on Gmail target<br/>enhanced mode = brighter + bouncing arrow]
-  WT -.->|I Need More Help| ESC[Escalation Overlay<br/>5 modes: cant-find · slower<br/>scared · dont-understand · human]
+  WT --> GUIDE[Guide Overlay on Gmail<br/>spotlight on real DOM target<br/>enhanced mode: brighter + bouncing arrow]
+  WT -.->|I Need More Help| ESC[Escalation Overlay<br/>5 modes:<br/>cant-find · slower · scared<br/>dont-understand · human]
+  ESC -.->|sets| STATE
 
-  S5 -.->|Add reminder| RC[Reminder Center<br/>filter pills · grouped by<br/>Overdue · Today · Week · Upcoming]
-  RC -.->|Restart guide| WT
+  %% ─── REMINDER LOOP ───
+  S5 -.->|Add reminder| RC[Reminder Center<br/>filter pills · grouped by:<br/>Overdue · Today · This Week · Upcoming]
   S4 -.->|Save email as reminder| RC
+  RC -.->|Restart guide| WT
+  RC <-.-> PERSIST
 
-  PANEL --> A11Y[Accessibility menu<br/>font size · high contrast<br/>simplified view · read aloud TTS]
+  classDef inputBox fill:#dbeafe,stroke:#2563eb,stroke-width:2px
+  classDef processBox fill:#fef3c7,stroke:#d97706,stroke-width:2px
+  classDef outputBox fill:#dcfce7,stroke:#16a34a,stroke-width:2px
+  class INPUT inputBox
+  class PROCESS processBox
+  class OUTPUT outputBox
 ```
 
-**State architecture:**
+### How to read the diagram
 
-In the **simulation**, all state lives in `App.jsx` and flows down as props (no global store).
+The three colored regions map to the brief's input/processing/output requirement:
 
-| State | Type | Controls |
-|---|---|---|
-| `language` | string | `korean` / `english` / `bilingual` / `simple` across every component |
-| `activeTab` | string | Summary / Safety / Reply / Ask |
-| `walkthrough` / `walkthroughStep` | object / int | Active guided step + index |
-| `slowMode`, `guideEnhanced` | boolean | Set by escalation choices |
-| `reminders` | array | Persisted to `localStorage` |
-| `escalationOpen` / `escalationMode` | bool / string | Help overlay state |
-| `a11y` | object | Font size, contrast, simplified, reduce motion |
+- **🟦 INPUT (blue):** The classifier accepts data from two sources. In the simulation, it's a static mock object from `mockEmail.js`. In the extension, it's a live DOM read of the currently open Gmail email — subject from `h2.hP`, sender from `.gD[email]`, body from `.a3s.aiL` or `.aXjCH` (Gmail uses both depending on view mode). Same data shape either way.
 
-In the **extension**, the equivalent state lives in a single `ST` object inside `content.js`. The extension reads live Gmail DOM (`h2.hP` for subject, `.gD[email]` for sender, `.a3s.aiL`/`.aXjCH` for body), runs the same classifier, and renders identical UI with vanilla DOM (every class is `doumi-` prefixed to avoid Gmail CSS collisions). Reminders persist in `localStorage`. Panel position/size persist as `doumi_pos` and `doumi_size`.
+- **🟧 PROCESSING (orange):** `analyze()` routes the email by content keywords to a type-specific analyzer (DDS renewal, Bill/Payment, Appointment, Delivery, or Generic). Each analyzer produces a structured analysis object. `enrichAnalysis()` is the post-processor that attaches the StatusCard meta (priority/deadline/risk), case-memory data, walkthrough confirm labels, and glossary email-context blocks — so downstream UI never needs to do conditional rendering based on email type. The state object holds all panel state and is bidirectionally synced with `localStorage` for reminders and panel pos/size.
 
-The language toggle is the single source of truth for text — no string is hardcoded inside a component or render function; every visible string flows through a bilingual `{korean, english}` object resolved by `t()` (extension) or `getText()` (simulation).
+- **🟩 OUTPUT (green):** The floating panel is the root surface; everything else is downstream of it. The language layer resolves every visible string from a `{korean, english}` bilingual object — there is *zero* hardcoded text inside any component. Four tabs (Summary, Safety, Reply, Ask) route to their content. Summary has eight stacked sections in a deliberate order: classifier card, summary, key details, action checklist, dates, warnings, glossary, case memory.
+
+The dashed arrows are **interactive triggers**: clicking "Start guide" or a reminder's "Restart guide" launches the walkthrough; "I Need More Help" inside the walkthrough opens the escalation overlay, which can write back to state (slow mode, enhanced guide); adding a reminder from either the dates panel or the checklist routes through the same `addReminder()` flow.
+
+### State architecture
+
+The simulation and the extension use the same state shape, just different containers:
+
+- **Simulation:** state lives in React `useState` hooks in `App.jsx`, passed down as props. No global store.
+- **Extension:** state lives in a single `ST` object literal in `content.js`. Mutations call `rerender()` which calls `el.innerHTML = renderPanel()`. Vanilla DOM, every class `doumi-` prefixed to avoid Gmail CSS collisions, max-int `z-index` on the panel + spotlight overlay so they always win against Gmail's chrome.
+
+| State key | Purpose |
+|---|---|
+| `language` | One of `korean` / `english` / `bilingual` / `simple` — single source of truth for every visible string |
+| `tab` / `activeTab` | Which of the 4 tabs is open |
+| `analysis` | The current enriched analysis object for the open email |
+| `walkthrough` / `wtStep` / `wtPaused` / `slowMode` | Active guided-step state |
+| `guideActive` / `guideInfo` / `guideEnhanced` | Spotlight overlay state on the email DOM |
+| `escOpen` / `escMode` | Escalation overlay (which of 5 modes) |
+| `reminders` | Array of `{id, title, dueDate, urgency, category, walkthroughId, completed}` — persisted to `localStorage` |
+| `rcFilter` / `rcShowCompleted` | Reminder Center filter pill + completed-section toggle |
+| `pickingDate` / `customDate` / `confirmedDates` / `doneDates` | Per-date inline picker state |
+| `pickingEmailReminder` / `emailReminderCustom` | "Save email as reminder" picker state |
+| `a11y` | `{fontSize, highContrast, reduceMotion, simplified}` |
+| `pos` / `size` / `minimized` | Floating-panel geometry — persisted as `doumi_pos` / `doumi_size` in extension |
+| `readState` / `readIdx` | Read-aloud TTS state |
+| `chatHistory` / `replyIdx` / `replyText` | Q+A and reply-tab state |
+
+The text resolver — `getText(item, language)` in the simulation, `t(item)` in the extension — is the single function that knows about language. Every bilingual data field is a `{korean, english}` object, and adding the fourth reading level ("쉬운 English") cost exactly one line in the resolver, not a 50-file find-and-replace.
 
 ---
 
@@ -584,7 +667,7 @@ Working with a real person made the project feel much more honest, personal, and
 - [x] Design Argument written
 - [x] Research documentation complete (quotes, environment, workarounds)
 - [x] Platform Rationale written
-- [x] Mermaid diagram accurate to final build
+- [x] System Architecture Diagram (Mermaid) accurate to final build
 - [x] AI Direction Log — 5+ entries (6 entries)
 - [x] Records of Resistance — 3+ entries
 - [x] User Testing Evidence uploaded (5 photos in `docs/testing/`)
