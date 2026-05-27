@@ -1,276 +1,434 @@
-/* ═══════════════════════════════════════════════════════
-   이메일 도우미 — Chrome Extension Panel Styles
-   All classes prefixed doumi- to avoid Gmail conflicts.
-   ═══════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   이메일 도우미 — Chrome Extension  (light mode, matches simulation)
+   All classes prefixed doumi- to avoid Gmail collisions.
+   ═══════════════════════════════════════════════════════════════ */
 
 #doumi-root {
   position: fixed !important;
-  top: 0 !important;
-  right: 0 !important;
-  width: 380px !important;
-  height: 100vh !important;
-  background: #ffffff !important;
+  top: 0 !important; right: 0 !important;
+  width: 430px !important; height: 100vh !important;
+  background: #fff !important;
   border-left: 1px solid #e2e8f0 !important;
   box-shadow: -4px 0 32px rgba(0,0,0,0.10) !important;
   z-index: 2147483647 !important;
-  display: flex !important;
-  flex-direction: column !important;
+  display: flex !important; flex-direction: column !important;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
-  font-size: 14px !important;
-  color: #1e293b !important;
-  overflow: hidden !important;
-  line-height: 1.5 !important;
+  font-size: 14px !important; color: #1e293b !important;
+  overflow: hidden !important; line-height: 1.5 !important;
   box-sizing: border-box !important;
 }
+#doumi-root * { box-sizing: border-box !important; font-family: inherit !important; }
 
-#doumi-root * {
-  box-sizing: border-box !important;
-  font-family: inherit !important;
-  line-height: inherit !important;
-}
-
-/* Toggle button — shown when panel is hidden */
+/* Toggle button */
 #doumi-toggle-btn {
-  position: fixed !important;
-  bottom: 24px !important;
-  right: 24px !important;
-  width: 48px !important;
-  height: 48px !important;
-  border-radius: 50% !important;
-  background: #2563eb !important;
-  border: none !important;
-  cursor: pointer !important;
-  font-size: 22px !important;
-  display: none !important;
-  align-items: center !important;
-  justify-content: center !important;
+  position: fixed !important; bottom: 24px !important; right: 24px !important;
+  width: 50px !important; height: 50px !important; border-radius: 50% !important;
+  background: #2563eb !important; border: none !important; cursor: pointer !important;
+  font-size: 22px !important; display: none !important;
+  align-items: center !important; justify-content: center !important;
   z-index: 2147483646 !important;
   box-shadow: 0 4px 16px rgba(37,99,235,0.4) !important;
   transition: transform 0.15s ease !important;
 }
 #doumi-toggle-btn:hover { transform: scale(1.1) !important; }
 
-/* Header */
+/* ── Header ──────────────────────────────────────────────────── */
 .doumi-hdr {
-  background: #f8fafc !important;
-  padding: 10px 14px !important;
-  display: flex !important;
-  align-items: center !important;
+  background: #f8fafc !important; padding: 9px 12px !important;
+  display: flex !important; align-items: center !important;
   justify-content: space-between !important;
-  border-bottom: 1px solid #e2e8f0 !important;
-  flex-shrink: 0 !important;
+  border-bottom: 1px solid #e2e8f0 !important; flex-shrink: 0 !important;
+  position: relative !important; z-index: 2 !important;
 }
-.doumi-title {
-  font-size: 15px !important;
-  font-weight: 700 !important;
-  color: #0f172a !important;
+.doumi-title { font-size: 14px !important; font-weight: 700 !important; color: #0f172a !important; }
+.doumi-hdr-right { display: flex !important; align-items: center !important; gap: 6px !important; }
+.doumi-bell {
+  position: relative !important; background: none !important; border: none !important;
+  cursor: pointer !important; font-size: 16px !important; padding: 3px 5px !important;
+  border-radius: 6px !important; color: #64748b !important; line-height: 1 !important;
+}
+.doumi-bell--active { color: #2563eb !important; background: #eff6ff !important; }
+.doumi-bell__badge {
+  position: absolute !important; top: -2px !important; right: -2px !important;
+  background: #ef4444 !important; color: #fff !important;
+  font-size: 9px !important; font-weight: 700 !important;
+  min-width: 14px !important; height: 14px !important; border-radius: 7px !important;
+  display: flex !important; align-items: center !important; justify-content: center !important;
+  padding: 0 3px !important;
 }
 .doumi-icon-btn {
-  background: none !important;
-  border: none !important;
-  cursor: pointer !important;
-  font-size: 14px !important;
-  color: #94a3b8 !important;
-  padding: 3px 5px !important;
-  border-radius: 4px !important;
-  line-height: 1 !important;
+  background: none !important; border: none !important; cursor: pointer !important;
+  font-size: 13px !important; color: #94a3b8 !important;
+  padding: 3px 6px !important; border-radius: 4px !important; line-height: 1 !important;
 }
 .doumi-icon-btn:hover { background: #f1f5f9 !important; color: #475569 !important; }
 
-/* Language bar */
+/* ── Language bar ────────────────────────────────────────────── */
 .doumi-langs {
-  display: flex !important;
-  padding: 8px 12px !important;
-  gap: 6px !important;
-  border-bottom: 1px solid #e2e8f0 !important;
-  flex-shrink: 0 !important;
-  flex-wrap: wrap !important;
+  display: flex !important; padding: 7px 10px !important; gap: 5px !important;
+  border-bottom: 1px solid #e2e8f0 !important; flex-shrink: 0 !important; flex-wrap: wrap !important;
 }
 .doumi-lbtn {
-  padding: 4px 10px !important;
-  border-radius: 20px !important;
-  font-size: 12px !important;
-  border: 1px solid #e2e8f0 !important;
-  background: transparent !important;
-  color: #64748b !important;
-  cursor: pointer !important;
-  white-space: nowrap !important;
+  padding: 4px 9px !important; border-radius: 20px !important; font-size: 11.5px !important;
+  border: 1px solid #e2e8f0 !important; background: transparent !important;
+  color: #64748b !important; cursor: pointer !important; white-space: nowrap !important;
 }
-.doumi-lbtn--on {
-  background: #2563eb !important;
-  border-color: #2563eb !important;
-  color: #ffffff !important;
-  font-weight: 600 !important;
-}
+.doumi-lbtn--on { background: #2563eb !important; border-color: #2563eb !important; color: #fff !important; font-weight: 600 !important; }
 .doumi-lbtn:hover:not(.doumi-lbtn--on) { background: #f1f5f9 !important; }
 
-/* Tabs */
-.doumi-tabs {
-  display: flex !important;
-  border-bottom: 1px solid #e2e8f0 !important;
-  flex-shrink: 0 !important;
-}
+/* ── Tabs ────────────────────────────────────────────────────── */
+.doumi-tabs { display: flex !important; border-bottom: 1px solid #e2e8f0 !important; flex-shrink: 0 !important; }
 .doumi-tbtn {
-  flex: 1 !important;
-  padding: 8px 4px !important;
-  text-align: center !important;
-  font-size: 13px !important;
-  color: #94a3b8 !important;
-  border: none !important;
-  border-bottom: 2px solid transparent !important;
-  background: transparent !important;
-  cursor: pointer !important;
-  font-weight: 400 !important;
+  flex: 1 !important; padding: 7px 4px !important; text-align: center !important;
+  font-size: 12.5px !important; color: #94a3b8 !important;
+  border: none !important; border-bottom: 2px solid transparent !important;
+  background: transparent !important; cursor: pointer !important;
 }
-.doumi-tbtn--on {
-  color: #2563eb !important;
-  border-bottom-color: #2563eb !important;
-  font-weight: 600 !important;
-}
+.doumi-tbtn--on { color: #2563eb !important; border-bottom-color: #2563eb !important; font-weight: 600 !important; }
 .doumi-tbtn:hover:not(.doumi-tbtn--on) { color: #475569 !important; background: #f8fafc !important; }
 
-/* Body */
+/* ── Body ────────────────────────────────────────────────────── */
 .doumi-body {
-  flex: 1 !important;
-  overflow-y: auto !important;
-  padding: 12px !important;
-  display: flex !important;
-  flex-direction: column !important;
+  flex: 1 !important; overflow-y: auto !important; padding: 10px !important;
+  display: flex !important; flex-direction: column !important; gap: 8px !important;
 }
 .doumi-body::-webkit-scrollbar { width: 4px !important; }
 .doumi-body::-webkit-scrollbar-thumb { background: #cbd5e1 !important; border-radius: 2px !important; }
 
-/* Cards */
+/* ── Status card ─────────────────────────────────────────────── */
+.doumi-status-card { display: flex !important; flex-direction: column !important; gap: 6px !important; }
+.doumi-status-badge {
+  display: inline-flex !important; align-items: center !important; gap: 5px !important;
+  border-radius: 6px !important; padding: 5px 12px !important;
+  font-size: 11.5px !important; font-weight: 700 !important;
+  text-transform: uppercase !important; letter-spacing: 0.05em !important;
+  border: 1px solid currentColor !important; width: fit-content !important;
+}
+.doumi-urgency-row {
+  display: flex !important; gap: 6px !important; align-items: center !important;
+  font-size: 11.5px !important;
+}
+.doumi-urgency-pip {
+  width: 8px !important; height: 8px !important; border-radius: 50% !important;
+}
+
+/* ── Cards ───────────────────────────────────────────────────── */
 .doumi-card {
-  background: #f8fafc !important;
-  border-radius: 8px !important;
-  padding: 10px 12px !important;
-  border-left: 3px solid #94a3b8 !important;
+  background: #f8fafc !important; border-radius: 8px !important;
+  padding: 9px 11px !important; border-left: 3px solid #94a3b8 !important;
 }
 .doumi-card--blue { border-left-color: #3b82f6 !important; background: #eff6ff !important; }
+.doumi-card--warn { border-left-color: #f59e0b !important; background: #fffbeb !important; }
+.doumi-card--green { border-left-color: #22c55e !important; background: #f0fdf4 !important; }
 .doumi-card__lbl {
-  font-size: 10.5px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.08em !important;
-  color: #2563eb !important;
-  text-transform: uppercase !important;
-  margin-bottom: 6px !important;
+  font-size: 10px !important; font-weight: 700 !important; letter-spacing: 0.08em !important;
+  color: #2563eb !important; text-transform: uppercase !important; margin-bottom: 5px !important;
 }
-.doumi-card__txt { font-size: 13px !important; color: #334155 !important; line-height: 1.55 !important; }
+.doumi-card__lbl--warn { color: #d97706 !important; }
+.doumi-card__lbl--green { color: #16a34a !important; }
+.doumi-card__txt { font-size: 12.5px !important; color: #334155 !important; line-height: 1.55 !important; }
 .doumi-card__txt strong, .doumi-card__txt b { color: #0f172a !important; }
 .doumi-sec { font-size: 11.5px !important; color: #64748b !important; display: block !important; margin-top: 2px !important; }
+.doumi-list { margin: 0 !important; padding-left: 16px !important; font-size: 12.5px !important; color: #334155 !important; }
+.doumi-list li { margin-bottom: 3px !important; }
 
-/* Badge */
-.doumi-badge {
-  display: inline-flex !important;
-  align-items: center !important;
-  border-radius: 6px !important;
-  padding: 5px 12px !important;
-  font-size: 11.5px !important;
-  font-weight: 700 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.06em !important;
-  border: 1px solid currentColor !important;
+/* ── Action checklist ────────────────────────────────────────── */
+.doumi-cl-wrap { background: #f8fafc !important; border-radius: 8px !important; padding: 6px 8px !important; border: 1px solid #e2e8f0 !important; }
+.doumi-cl-hdr { display: flex !important; align-items: center !important; justify-content: space-between !important; margin-bottom: 4px !important; }
+.doumi-wt-start-btn {
+  padding: 4px 10px !important; border-radius: 20px !important; font-size: 11px !important;
+  background: #22c55e !important; color: #fff !important; border: none !important;
+  cursor: pointer !important; font-weight: 600 !important;
 }
+.doumi-ci { display: flex !important; align-items: flex-start !important; gap: 8px !important; padding: 7px 0 !important; border-bottom: 1px solid #f1f5f9 !important; }
+.doumi-ci:last-child { border-bottom: none !important; }
+.doumi-cbox {
+  width: 18px !important; height: 18px !important; border: 2px solid #3b82f6 !important;
+  border-radius: 4px !important; flex-shrink: 0 !important; margin-top: 1px !important;
+  cursor: pointer !important; display: flex !important; align-items: center !important;
+  justify-content: center !important; font-size: 11px !important; color: transparent !important;
+}
+.doumi-cbox--chk { background: #22c55e !important; border-color: #22c55e !important; color: #fff !important; }
+.doumi-ci__body { flex: 1 !important; }
+.doumi-ci__txt { font-size: 12.5px !important; color: #334155 !important; }
+.doumi-ci__txt--done { text-decoration: line-through !important; color: #94a3b8 !important; }
+.doumi-ci__acts { display: flex !important; gap: 5px !important; margin-top: 4px !important; }
+.doumi-gbtn {
+  padding: 3px 8px !important; border-radius: 4px !important; font-size: 11px !important;
+  background: #eff6ff !important; border: 1px solid #3b82f6 !important;
+  color: #2563eb !important; cursor: pointer !important;
+}
+.doumi-gbtn--active { background: #2563eb !important; color: #fff !important; }
+.doumi-why-body { margin-top: 5px !important; font-size: 12px !important; color: #475569 !important; background: #f1f5f9 !important; border-radius: 5px !important; padding: 6px 8px !important; }
 
-/* List */
-.doumi-list {
-  margin: 0 !important;
-  padding-left: 18px !important;
-  font-size: 13px !important;
-  color: #334155 !important;
+/* ── Dates panel ─────────────────────────────────────────────── */
+.doumi-date-card {
+  background: #eff6ff !important; border-radius: 8px !important;
+  padding: 8px 10px !important; border-left: 3px solid #3b82f6 !important;
 }
-.doumi-list li { margin-bottom: 4px !important; }
+.doumi-date-card__lbl { font-size: 10px !important; font-weight: 700 !important; color: #2563eb !important; text-transform: uppercase !important; letter-spacing: .07em !important; }
+.doumi-date-card__val { font-size: 13px !important; font-weight: 700 !important; color: #0f172a !important; margin: 3px 0 !important; }
+.doumi-date-card__meaning { font-size: 12px !important; color: #475569 !important; margin-bottom: 6px !important; }
+.doumi-date-card__btns { display: flex !important; gap: 6px !important; }
+.doumi-date-btn {
+  padding: 4px 10px !important; border-radius: 6px !important; font-size: 11.5px !important;
+  border: 1px solid #e2e8f0 !important; background: #fff !important;
+  color: #475569 !important; cursor: pointer !important; font-weight: 500 !important;
+}
+.doumi-date-btn--primary { background: #2563eb !important; color: #fff !important; border-color: #2563eb !important; }
 
-/* Safety */
-.doumi-verdict {
-  border-radius: 10px !important;
-  padding: 14px !important;
-  text-align: center !important;
-  margin-bottom: 12px !important;
-  border: 2px solid !important;
+/* ── Expandable sections ─────────────────────────────────────── */
+.doumi-section { border: 1px solid #e2e8f0 !important; border-radius: 8px !important; overflow: hidden !important; }
+.doumi-section__hdr {
+  display: flex !important; align-items: center !important; justify-content: space-between !important;
+  padding: 8px 11px !important; cursor: pointer !important; background: #f8fafc !important;
+  font-size: 12.5px !important; font-weight: 600 !important; color: #334155 !important;
 }
+.doumi-section__hdr:hover { background: #f1f5f9 !important; }
+.doumi-section__body { padding: 8px 11px !important; border-top: 1px solid #e2e8f0 !important; }
+.doumi-term { padding: 5px 0 !important; border-bottom: 1px solid #f1f5f9 !important; }
+.doumi-term:last-child { border-bottom: none !important; }
+.doumi-term__word { font-size: 12.5px !important; font-weight: 700 !important; color: #0f172a !important; margin-bottom: 2px !important; }
+.doumi-term__def { font-size: 12px !important; color: #475569 !important; }
+
+/* ── Safety ──────────────────────────────────────────────────── */
+.doumi-verdict { border-radius: 10px !important; padding: 13px !important; text-align: center !important; border: 2px solid !important; margin-bottom: 10px !important; }
 .doumi-verdict--ok   { background: #f0fdf4 !important; border-color: #22c55e !important; }
 .doumi-verdict--bad  { background: #fef2f2 !important; border-color: #ef4444 !important; }
 .doumi-verdict--warn { background: #fffbeb !important; border-color: #f59e0b !important; }
-.doumi-verdict__icon  { font-size: 28px !important; margin-bottom: 6px !important; }
+.doumi-verdict__icon  { font-size: 26px !important; margin-bottom: 5px !important; }
 .doumi-verdict__label { font-size: 14px !important; font-weight: 800 !important; color: #0f172a !important; }
-.doumi-verdict__sub   { font-size: 12px !important; color: #475569 !important; margin-top: 4px !important; }
-
-.doumi-findings { display: flex !important; flex-direction: column !important; gap: 2px !important; }
-.doumi-finding {
-  display: flex !important;
-  gap: 8px !important;
-  align-items: flex-start !important;
-  padding: 5px 0 !important;
-  border-bottom: 1px solid #f1f5f9 !important;
-  font-size: 12.5px !important;
-  color: #475569 !important;
-}
+.doumi-verdict__sub   { font-size: 11.5px !important; color: #475569 !important; margin-top: 3px !important; }
+.doumi-findings { display: flex !important; flex-direction: column !important; }
+.doumi-finding { display: flex !important; gap: 7px !important; align-items: flex-start !important; padding: 5px 0 !important; border-bottom: 1px solid #f1f5f9 !important; font-size: 12.5px !important; color: #475569 !important; }
 .doumi-finding:last-child { border-bottom: none !important; }
-.doumi-dot {
-  width: 7px !important;
-  height: 7px !important;
-  border-radius: 50% !important;
-  flex-shrink: 0 !important;
-  margin-top: 4px !important;
-}
+.doumi-dot { width: 7px !important; height: 7px !important; border-radius: 50% !important; flex-shrink: 0 !important; margin-top: 4px !important; }
 .doumi-dot--ok   { background: #22c55e !important; }
 .doumi-dot--bad  { background: #ef4444 !important; }
 .doumi-dot--warn { background: #f59e0b !important; }
 
-/* Checklist */
-.doumi-checklist { display: flex !important; flex-direction: column !important; }
-.doumi-ci {
-  display: flex !important;
-  align-items: flex-start !important;
-  gap: 10px !important;
-  padding: 8px 0 !important;
-  border-bottom: 1px solid #f1f5f9 !important;
+/* ── Reply tab ───────────────────────────────────────────────── */
+.doumi-reply-chips { display: flex !important; flex-wrap: wrap !important; gap: 6px !important; margin-bottom: 10px !important; }
+.doumi-chip {
+  padding: 5px 12px !important; border-radius: 20px !important; font-size: 12px !important;
+  border: 1px solid #e2e8f0 !important; background: #f8fafc !important;
+  color: #475569 !important; cursor: pointer !important;
 }
-.doumi-ci:last-child { border-bottom: none !important; }
-.doumi-cbox {
-  width: 18px !important;
-  height: 18px !important;
-  border: 2px solid #3b82f6 !important;
-  border-radius: 4px !important;
-  flex-shrink: 0 !important;
-  margin-top: 1px !important;
-  cursor: pointer !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-size: 11px !important;
-  color: transparent !important;
-  transition: background 0.15s !important;
+.doumi-chip--on { background: #eff6ff !important; border-color: #3b82f6 !important; color: #2563eb !important; font-weight: 600 !important; }
+.doumi-reply-textarea {
+  width: 100% !important; min-height: 110px !important; border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important; padding: 9px !important; font-size: 13px !important;
+  color: #1e293b !important; background: #fff !important; resize: vertical !important;
+  outline: none !important; font-family: inherit !important; line-height: 1.5 !important;
 }
-.doumi-cbox--chk {
-  background: #22c55e !important;
-  border-color: #22c55e !important;
-  color: #ffffff !important;
+.doumi-reply-textarea:focus { border-color: #3b82f6 !important; box-shadow: 0 0 0 3px rgba(59,130,246,.15) !important; }
+.doumi-reply-footer { display: flex !important; justify-content: flex-end !important; margin-top: 6px !important; }
+.doumi-copy-btn {
+  padding: 6px 14px !important; border-radius: 6px !important; font-size: 12.5px !important;
+  background: #2563eb !important; color: #fff !important; border: none !important;
+  cursor: pointer !important; font-weight: 600 !important;
 }
-.doumi-ci__txt { flex: 1 !important; font-size: 13px !important; color: #334155 !important; }
-.doumi-ci__txt--done { text-decoration: line-through !important; color: #94a3b8 !important; }
+.doumi-copy-btn:hover { background: #1d4ed8 !important; }
+.doumi-copied { background: #22c55e !important; }
 
-/* Waiting state */
-.doumi-waiting {
-  flex: 1 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  padding: 32px !important;
-  color: #475569 !important;
-  font-size: 14px !important;
+/* ── Ask / Chat tab ──────────────────────────────────────────── */
+.doumi-chat-presets { display: flex !important; flex-wrap: wrap !important; gap: 6px !important; margin-bottom: 10px !important; }
+.doumi-chat-msgs { display: flex !important; flex-direction: column !important; gap: 8px !important; }
+.doumi-chat-bubble {
+  max-width: 90% !important; border-radius: 12px !important; padding: 9px 12px !important;
+  font-size: 12.5px !important; line-height: 1.5 !important;
+}
+.doumi-chat-bubble--user { background: #2563eb !important; color: #fff !important; align-self: flex-end !important; border-bottom-right-radius: 3px !important; }
+.doumi-chat-bubble--ai   { background: #f1f5f9 !important; color: #334155 !important; align-self: flex-start !important; border-bottom-left-radius: 3px !important; }
+.doumi-chat-hint { font-size: 11.5px !important; color: #94a3b8 !important; text-align: center !important; margin-top: 8px !important; }
+
+/* ── Walkthrough bar ─────────────────────────────────────────── */
+.doumi-walkthrough {
+  background: #0f172a !important; border-top: 2px solid #3b82f6 !important;
+  padding: 9px 13px !important; flex-shrink: 0 !important;
+}
+.doumi-wt__hdr { font-size: 9.5px !important; font-weight: 700 !important; letter-spacing: 0.1em !important; color: #60a5fa !important; text-transform: uppercase !important; margin-bottom: 4px !important; display: flex !important; justify-content: space-between !important; }
+.doumi-wt__txt { font-size: 12.5px !important; color: #e2e8f0 !important; line-height: 1.4 !important; margin-bottom: 9px !important; }
+.doumi-wt__btns { display: flex !important; gap: 7px !important; align-items: center !important; }
+.doumi-wt-btn { padding: 5px 11px !important; border-radius: 6px !important; font-size: 12px !important; font-weight: 600 !important; border: none !important; cursor: pointer !important; }
+.doumi-wt-btn--back  { background: #1e3a5f !important; color: #94a3b8 !important; }
+.doumi-wt-btn--pause { background: #374151 !important; color: #e2e8f0 !important; }
+.doumi-wt-btn--go    { background: #22c55e !important; color: #fff !important; flex: 1 !important; }
+.doumi-wt__foot { display: flex !important; justify-content: space-between !important; margin-top: 7px !important; }
+.doumi-wt-help { background: transparent !important; border: 1px solid #f59e0b !important; color: #fbbf24 !important; font-size: 11.5px !important; padding: 5px 11px !important; border-radius: 6px !important; cursor: pointer !important; font-weight: 600 !important; }
+.doumi-wt-exit { background: none !important; border: none !important; color: #f87171 !important; font-size: 12px !important; font-weight: 600 !important; cursor: pointer !important; }
+
+/* ── Escalation overlay ──────────────────────────────────────── */
+.doumi-esc-overlay {
+  position: absolute !important; left: 0 !important; right: 0 !important;
+  bottom: 0 !important; top: 52px !important;
+  background: #fff !important; z-index: 10 !important;
+  display: flex !important; flex-direction: column !important;
+  padding: 16px !important; overflow-y: auto !important;
+}
+.doumi-esc-title { font-size: 15px !important; font-weight: 700 !important; color: #0f172a !important; margin-bottom: 6px !important; }
+.doumi-esc-sub { font-size: 13px !important; color: #64748b !important; margin-bottom: 16px !important; }
+.doumi-esc-choices { display: flex !important; flex-direction: column !important; gap: 10px !important; }
+.doumi-esc-choice {
+  padding: 14px !important; border-radius: 10px !important; border: 2px solid #e2e8f0 !important;
+  cursor: pointer !important; text-align: left !important; background: #fff !important;
+}
+.doumi-esc-choice:hover { border-color: #3b82f6 !important; background: #eff6ff !important; }
+.doumi-esc-choice__icon { font-size: 24px !important; margin-bottom: 6px !important; }
+.doumi-esc-choice__title { font-size: 13.5px !important; font-weight: 700 !important; color: #0f172a !important; margin-bottom: 3px !important; }
+.doumi-esc-choice__desc { font-size: 12px !important; color: #64748b !important; }
+.doumi-esc-mode-body { flex: 1 !important; }
+.doumi-esc-back {
+  margin-top: 12px !important; padding: 8px !important; border-radius: 6px !important;
+  border: 1px solid #e2e8f0 !important; background: #f8fafc !important;
+  cursor: pointer !important; font-size: 12.5px !important; color: #475569 !important;
+  font-weight: 600 !important;
 }
 
-/* Footer */
-.doumi-footer {
-  padding: 8px 14px !important;
-  font-size: 11px !important;
-  color: #94a3b8 !important;
-  border-top: 1px solid #f1f5f9 !important;
-  flex-shrink: 0 !important;
-  text-align: center !important;
+/* ── Accessibility menu ──────────────────────────────────────── */
+.doumi-a11y-wrap { position: relative !important; }
+.doumi-a11y-dropdown {
+  position: absolute !important; top: 100% !important; right: 0 !important;
+  background: #fff !important; border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important; box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
+  padding: 10px !important; width: 200px !important; z-index: 20 !important;
 }
+.doumi-a11y-title { font-size: 10.5px !important; font-weight: 700 !important; color: #94a3b8 !important; text-transform: uppercase !important; letter-spacing: .08em !important; margin-bottom: 8px !important; }
+.doumi-a11y-row { display: flex !important; align-items: center !important; justify-content: space-between !important; margin-bottom: 8px !important; }
+.doumi-a11y-row__lbl { font-size: 12.5px !important; color: #334155 !important; }
+.doumi-a11y-sizes { display: flex !important; gap: 4px !important; }
+.doumi-a11y-size {
+  padding: 3px 7px !important; border-radius: 4px !important; font-size: 12px !important;
+  border: 1px solid #e2e8f0 !important; background: #f8fafc !important;
+  color: #475569 !important; cursor: pointer !important;
+}
+.doumi-a11y-size--on { background: #2563eb !important; color: #fff !important; border-color: #2563eb !important; }
+.doumi-switch {
+  width: 34px !important; height: 19px !important; border-radius: 10px !important;
+  background: #e2e8f0 !important; border: none !important; cursor: pointer !important;
+  position: relative !important; transition: background 0.2s !important; flex-shrink: 0 !important;
+  padding: 0 !important;
+}
+.doumi-switch--on { background: #2563eb !important; }
+.doumi-switch__thumb {
+  position: absolute !important; top: 2px !important; left: 2px !important;
+  width: 15px !important; height: 15px !important; border-radius: 50% !important;
+  background: #fff !important; transition: left 0.2s !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,.2) !important;
+}
+.doumi-switch--on .doumi-switch__thumb { left: 17px !important; }
+.doumi-read-btn {
+  width: 100% !important; padding: 7px !important; border-radius: 6px !important;
+  background: #eff6ff !important; border: 1px solid #3b82f6 !important;
+  color: #2563eb !important; cursor: pointer !important; font-size: 12.5px !important;
+  font-weight: 600 !important; margin-top: 4px !important;
+}
+.doumi-read-controls { display: flex !important; flex-direction: column !important; gap: 5px !important; margin-top: 4px !important; }
+.doumi-read-status { display: flex !important; align-items: center !important; gap: 6px !important; font-size: 12px !important; color: #475569 !important; }
+.doumi-read-dot { width: 7px !important; height: 7px !important; border-radius: 50% !important; background: #94a3b8 !important; }
+.doumi-read-dot--active { background: #22c55e !important; animation: dpulse 1.5s ease-in-out infinite !important; }
+.doumi-read-btns { display: flex !important; gap: 5px !important; }
+.doumi-read-ctrl {
+  flex: 1 !important; padding: 5px !important; border-radius: 5px !important;
+  font-size: 11.5px !important; border: 1px solid #e2e8f0 !important;
+  background: #f8fafc !important; color: #475569 !important; cursor: pointer !important;
+}
+.doumi-read-ctrl--stop { border-color: #fca5a5 !important; color: #ef4444 !important; }
+
+/* ── Reminder center ─────────────────────────────────────────── */
+.doumi-rc-hdr { display: flex !important; align-items: center !important; justify-content: space-between !important; margin-bottom: 12px !important; }
+.doumi-rc-title { font-size: 14px !important; font-weight: 700 !important; color: #0f172a !important; }
+.doumi-rc-group-lbl { font-size: 10.5px !important; font-weight: 700 !important; color: #94a3b8 !important; text-transform: uppercase !important; letter-spacing: .08em !important; margin: 10px 0 5px !important; }
+.doumi-ri {
+  background: #f8fafc !important; border-radius: 8px !important; padding: 10px !important;
+  border: 1px solid #e2e8f0 !important; margin-bottom: 6px !important;
+}
+.doumi-ri__top { display: flex !important; align-items: flex-start !important; justify-content: space-between !important; gap: 6px !important; margin-bottom: 5px !important; }
+.doumi-ri__title { font-size: 13px !important; font-weight: 600 !important; color: #0f172a !important; flex: 1 !important; }
+.doumi-ri__badge {
+  padding: 2px 7px !important; border-radius: 10px !important; font-size: 10.5px !important;
+  font-weight: 700 !important; background: #fef3c7 !important; color: #b45309 !important;
+  border: 1px solid #f59e0b !important; flex-shrink: 0 !important;
+}
+.doumi-ri__badge--done { background: #f0fdf4 !important; color: #16a34a !important; border-color: #22c55e !important; }
+.doumi-ri__btns { display: flex !important; gap: 5px !important; }
+.doumi-ri-btn {
+  padding: 3px 8px !important; border-radius: 5px !important; font-size: 11px !important;
+  border: 1px solid #e2e8f0 !important; background: #fff !important;
+  color: #475569 !important; cursor: pointer !important;
+}
+.doumi-ri-btn--done { border-color: #22c55e !important; color: #16a34a !important; }
+.doumi-rc-empty { text-align: center !important; padding: 40px 20px !important; color: #94a3b8 !important; font-size: 13px !important; }
+
+/* ── Reminder toast ──────────────────────────────────────────── */
+.doumi-toast {
+  position: absolute !important; bottom: 60px !important; left: 10px !important; right: 10px !important;
+  background: #0f172a !important; color: #e2e8f0 !important;
+  border-radius: 10px !important; padding: 10px 14px !important;
+  display: flex !important; align-items: center !important; justify-content: space-between !important;
+  font-size: 12.5px !important; z-index: 30 !important;
+  animation: toastIn 0.3s ease !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2) !important;
+}
+.doumi-toast__text { flex: 1 !important; }
+.doumi-toast__title { font-weight: 600 !important; margin-bottom: 1px !important; }
+.doumi-toast__sub { font-size: 11px !important; color: #94a3b8 !important; }
+.doumi-toast__view { color: #60a5fa !important; background: none !important; border: none !important; cursor: pointer !important; font-size: 12px !important; font-weight: 600 !important; padding: 0 8px !important; }
+
+/* ── Guide overlay (renders over Gmail, outside panel) ───────── */
+#doumi-guide-root { position: fixed !important; inset: 0 !important; z-index: 2147483645 !important; pointer-events: none !important; }
+#doumi-guide-dismiss { position: fixed !important; inset: 0 !important; z-index: 2147483644 !important; cursor: pointer !important; }
+#doumi-guide-hl {
+  position: fixed !important; border: 2px solid #3b82f6 !important; border-radius: 5px !important;
+  box-shadow: 0 0 0 4000px rgba(0,0,0,0.35) !important; z-index: 2147483645 !important;
+  pointer-events: none !important;
+  animation: hl-pulse 1.5s ease-in-out infinite !important;
+}
+#doumi-guide-tip {
+  position: fixed !important; background: #fff !important; border: 1px solid #3b82f6 !important;
+  border-radius: 8px !important; padding: 9px 28px 9px 12px !important;
+  font-size: 12px !important; color: #1e293b !important; line-height: 1.5 !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important; z-index: 2147483647 !important;
+  max-width: 220px !important; pointer-events: auto !important;
+}
+#doumi-guide-tip strong { display: block !important; font-size: 12.5px !important; margin-bottom: 2px !important; color: #0f172a !important; }
+#doumi-guide-tip-x {
+  position: absolute !important; top: 6px !important; right: 8px !important;
+  background: none !important; border: none !important; cursor: pointer !important;
+  color: #94a3b8 !important; font-size: 11px !important; padding: 2px !important;
+}
+
+/* ── Accessibility modifier classes ──────────────────────────── */
+#doumi-root.doumi--large { zoom: 1.18 !important; }
+#doumi-root.doumi--xl    { zoom: 1.35 !important; }
+
+#doumi-root.doumi--hc { background: #0d0d0d !important; color: #f0f0f0 !important; border-color: #333 !important; }
+#doumi-root.doumi--hc .doumi-hdr { background: #111 !important; border-color: #333 !important; }
+#doumi-root.doumi--hc .doumi-title { color: #fff !important; }
+#doumi-root.doumi--hc .doumi-langs, #doumi-root.doumi--hc .doumi-tabs { border-color: #333 !important; }
+#doumi-root.doumi--hc .doumi-tbtn { color: #aaa !important; }
+#doumi-root.doumi--hc .doumi-tbtn--on { color: #60a5fa !important; border-bottom-color: #60a5fa !important; }
+#doumi-root.doumi--hc .doumi-lbtn { border-color: #444 !important; color: #aaa !important; }
+#doumi-root.doumi--hc .doumi-body { background: #0d0d0d !important; }
+#doumi-root.doumi--hc .doumi-card { background: #1a1a1a !important; border-left-color: #3b82f6 !important; }
+#doumi-root.doumi--hc .doumi-card__txt { color: #d1d5db !important; }
+#doumi-root.doumi--hc .doumi-card__lbl { color: #60a5fa !important; }
+#doumi-root.doumi--hc .doumi-ci__txt { color: #d1d5db !important; }
+#doumi-root.doumi--hc .doumi-cl-wrap { background: #111 !important; border-color: #333 !important; }
+#doumi-root.doumi--hc .doumi-section { border-color: #333 !important; }
+#doumi-root.doumi--hc .doumi-section__hdr { background: #111 !important; color: #d1d5db !important; }
+
+/* ── Read aloud highlight ────────────────────────────────────── */
+.doumi-ral { background: rgba(253,224,71,0.4) !important; outline: 2px solid rgba(234,179,8,.75) !important; outline-offset: 3px !important; border-radius: 4px !important; }
+
+/* ── Misc / Animations ───────────────────────────────────────── */
+.doumi-footer { padding: 7px 12px !important; font-size: 11px !important; color: #94a3b8 !important; border-top: 1px solid #f1f5f9 !important; flex-shrink: 0 !important; text-align: center !important; }
+.doumi-waiting { flex: 1 !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; text-align: center !important; padding: 32px !important; color: #475569 !important; }
+.doumi-section-lbl { font-size: 10px !important; font-weight: 700 !important; letter-spacing: .08em !important; color: #2563eb !important; text-transform: uppercase !important; margin-bottom: 5px !important; }
+
+@keyframes hl-pulse {
+  0%,100% { box-shadow: 0 0 0 4000px rgba(0,0,0,.35), 0 0 0 2px rgba(59,130,246,.5); }
+  50%      { box-shadow: 0 0 0 4000px rgba(0,0,0,.35), 0 0 0 5px rgba(59,130,246,.15); }
+}
+@keyframes dpulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+@keyframes toastIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
