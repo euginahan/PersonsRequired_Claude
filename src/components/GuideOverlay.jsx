@@ -23,21 +23,26 @@ export default function GuideOverlay({ targetId, label, onDismiss, enhanced = fa
 
   const pad = enhanced ? 14 : 8
 
-  // Keep tooltip from overlapping the floating panel
-  const TOOLTIP_W   = enhanced ? 244 : 214
-  const TOOLTIP_H   = 120                              // conservative height estimate
-  const panelEl     = document.querySelector('.fp-window')
-  const panelLeft   = panelEl ? panelEl.getBoundingClientRect().left : window.innerWidth
-  const maxLeft     = panelLeft - TOOLTIP_W - 12
-  const tooltipLeft = Math.min(Math.max(rect.left, 12), Math.max(12, maxLeft))
+  const TOOLTIP_W = enhanced ? 244 : 214
+  const TOOLTIP_H = 120
+  const panelEl   = document.querySelector('.fp-window')
+  const panelLeft = panelEl ? panelEl.getBoundingClientRect().left : window.innerWidth
 
-  // Prefer above so the tooltip never lands on email content below the highlight
-  const spaceAbove  = rect.top  - pad - 8
-  const spaceBelow  = window.innerHeight - rect.bottom - pad - 8
+  // Tooltip: right-aligned just left of the panel so it never covers email text
+  const tooltipLeft = Math.max(12, panelLeft - TOOLTIP_W - 12)
+
+  // Highlight: cap width so it doesn't bleed into the panel
+  const hlLeft  = rect.left - pad
+  const hlRight = Math.min(rect.right + pad, panelLeft - 8)
+  const hlWidth = Math.max(hlRight - hlLeft, 40)
+
+  // Prefer above the element
+  const spaceAbove   = rect.top - pad - 8
+  const spaceBelow   = window.innerHeight - rect.bottom - pad - 8
   const tooltipAbove = spaceAbove >= TOOLTIP_H || spaceAbove > spaceBelow
 
-  // Arrow positioned above the element, bouncing downward
-  const arrowLeft = rect.left + rect.width / 2 - 14
+  // Arrow points at element center, capped inside the highlight
+  const arrowLeft = Math.min(rect.left + rect.width / 2 - 14, hlRight - 20)
   const arrowTop  = rect.top - pad - 44
 
   return (
@@ -46,9 +51,9 @@ export default function GuideOverlay({ targetId, label, onDismiss, enhanced = fa
       <div
         className={`guide-highlight${enhanced ? ' guide-highlight--enhanced' : ''}`}
         style={{
-          top:    rect.top  - pad,
-          left:   rect.left - pad,
-          width:  rect.width  + pad * 2,
+          top:    rect.top - pad,
+          left:   hlLeft,
+          width:  hlWidth,
           height: rect.height + pad * 2,
         }}
       />
