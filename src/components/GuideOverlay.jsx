@@ -29,6 +29,13 @@ export default function GuideOverlay({ targetId, label, onDismiss, enhanced = fa
   const arrowLeft = rect.left + rect.width / 2 - 14
   const arrowTop  = rect.top - pad - 44
 
+  // Keep tooltip from overlapping the floating panel
+  const TOOLTIP_W  = enhanced ? 244 : 214   // matches max-width + some padding
+  const panelEl    = document.querySelector('.fp-window')
+  const panelLeft  = panelEl ? panelEl.getBoundingClientRect().left : window.innerWidth
+  const maxLeft    = panelLeft - TOOLTIP_W - 12   // 12px gap before panel edge
+  const tooltipLeft = Math.min(Math.max(rect.left, 12), Math.max(12, maxLeft))
+
   return (
     <div className="guide-root" onClick={onDismiss} role="presentation">
       {/* Spotlight */}
@@ -58,7 +65,7 @@ export default function GuideOverlay({ targetId, label, onDismiss, enhanced = fa
         className={`guide-tooltip${enhanced ? ' guide-tooltip--enhanced' : ''}`}
         style={{
           top:       tooltipAbove ? rect.top - pad - 8 : rect.bottom + pad + 8,
-          left:      Math.min(Math.max(rect.left, 12), window.innerWidth - 240),
+          left:      tooltipLeft,
           transform: tooltipAbove ? 'translateY(-100%)' : 'none',
         }}
         onClick={e => { e.stopPropagation(); onDismiss() }}
