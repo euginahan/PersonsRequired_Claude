@@ -1190,7 +1190,11 @@ function rerender() {
     syncPanel()
     return
   }
+  const prevBody = el.querySelector('.doumi-body')
+  const savedScroll = prevBody ? prevBody.scrollTop : 0
   el.innerHTML = renderPanel()
+  const newBody = el.querySelector('.doumi-body')
+  if (newBody && savedScroll) newBody.scrollTop = savedScroll
   addResizeHandles(el)
   // Attach drag to header
   const hdr = el.querySelector('.doumi-hdr')
