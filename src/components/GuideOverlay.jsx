@@ -22,19 +22,23 @@ export default function GuideOverlay({ targetId, label, onDismiss, enhanced = fa
   if (!rect || !targetId) return null
 
   const pad = enhanced ? 14 : 8
-  const spaceBelow = window.innerHeight - rect.bottom
-  const tooltipAbove = spaceBelow < 100
+
+  // Keep tooltip from overlapping the floating panel
+  const TOOLTIP_W   = enhanced ? 244 : 214
+  const TOOLTIP_H   = 120                              // conservative height estimate
+  const panelEl     = document.querySelector('.fp-window')
+  const panelLeft   = panelEl ? panelEl.getBoundingClientRect().left : window.innerWidth
+  const maxLeft     = panelLeft - TOOLTIP_W - 12
+  const tooltipLeft = Math.min(Math.max(rect.left, 12), Math.max(12, maxLeft))
+
+  // Prefer above so the tooltip never lands on email content below the highlight
+  const spaceAbove  = rect.top  - pad - 8
+  const spaceBelow  = window.innerHeight - rect.bottom - pad - 8
+  const tooltipAbove = spaceAbove >= TOOLTIP_H || spaceAbove > spaceBelow
 
   // Arrow positioned above the element, bouncing downward
   const arrowLeft = rect.left + rect.width / 2 - 14
   const arrowTop  = rect.top - pad - 44
-
-  // Keep tooltip from overlapping the floating panel
-  const TOOLTIP_W  = enhanced ? 244 : 214   // matches max-width + some padding
-  const panelEl    = document.querySelector('.fp-window')
-  const panelLeft  = panelEl ? panelEl.getBoundingClientRect().left : window.innerWidth
-  const maxLeft    = panelLeft - TOOLTIP_W - 12   // 12px gap before panel edge
-  const tooltipLeft = Math.min(Math.max(rect.left, 12), Math.max(12, maxLeft))
 
   return (
     <div className="guide-root" onClick={onDismiss} role="presentation">
