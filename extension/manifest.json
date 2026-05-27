@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "이메일 도우미",
+  "description": "Bilingual email assistant for Gmail — designed for Korean immigrant users navigating official English emails",
+  "version": "1.0.0",
+  "host_permissions": ["https://mail.google.com/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://mail.google.com/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_title": "이메일 도우미 — Toggle panel"
+  }
+}

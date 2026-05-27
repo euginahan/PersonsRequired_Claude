@@ -1,0 +1,276 @@
+/* ═══════════════════════════════════════════════════════
+   이메일 도우미 — Chrome Extension Panel Styles
+   All classes prefixed doumi- to avoid Gmail conflicts.
+   ═══════════════════════════════════════════════════════ */
+
+#doumi-root {
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  width: 380px !important;
+  height: 100vh !important;
+  background: #ffffff !important;
+  border-left: 1px solid #e2e8f0 !important;
+  box-shadow: -4px 0 32px rgba(0,0,0,0.10) !important;
+  z-index: 2147483647 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
+  font-size: 14px !important;
+  color: #1e293b !important;
+  overflow: hidden !important;
+  line-height: 1.5 !important;
+  box-sizing: border-box !important;
+}
+
+#doumi-root * {
+  box-sizing: border-box !important;
+  font-family: inherit !important;
+  line-height: inherit !important;
+}
+
+/* Toggle button — shown when panel is hidden */
+#doumi-toggle-btn {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  background: #2563eb !important;
+  border: none !important;
+  cursor: pointer !important;
+  font-size: 22px !important;
+  display: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 2147483646 !important;
+  box-shadow: 0 4px 16px rgba(37,99,235,0.4) !important;
+  transition: transform 0.15s ease !important;
+}
+#doumi-toggle-btn:hover { transform: scale(1.1) !important; }
+
+/* Header */
+.doumi-hdr {
+  background: #f8fafc !important;
+  padding: 10px 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  flex-shrink: 0 !important;
+}
+.doumi-title {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+}
+.doumi-icon-btn {
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  font-size: 14px !important;
+  color: #94a3b8 !important;
+  padding: 3px 5px !important;
+  border-radius: 4px !important;
+  line-height: 1 !important;
+}
+.doumi-icon-btn:hover { background: #f1f5f9 !important; color: #475569 !important; }
+
+/* Language bar */
+.doumi-langs {
+  display: flex !important;
+  padding: 8px 12px !important;
+  gap: 6px !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  flex-shrink: 0 !important;
+  flex-wrap: wrap !important;
+}
+.doumi-lbtn {
+  padding: 4px 10px !important;
+  border-radius: 20px !important;
+  font-size: 12px !important;
+  border: 1px solid #e2e8f0 !important;
+  background: transparent !important;
+  color: #64748b !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+}
+.doumi-lbtn--on {
+  background: #2563eb !important;
+  border-color: #2563eb !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+.doumi-lbtn:hover:not(.doumi-lbtn--on) { background: #f1f5f9 !important; }
+
+/* Tabs */
+.doumi-tabs {
+  display: flex !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  flex-shrink: 0 !important;
+}
+.doumi-tbtn {
+  flex: 1 !important;
+  padding: 8px 4px !important;
+  text-align: center !important;
+  font-size: 13px !important;
+  color: #94a3b8 !important;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  background: transparent !important;
+  cursor: pointer !important;
+  font-weight: 400 !important;
+}
+.doumi-tbtn--on {
+  color: #2563eb !important;
+  border-bottom-color: #2563eb !important;
+  font-weight: 600 !important;
+}
+.doumi-tbtn:hover:not(.doumi-tbtn--on) { color: #475569 !important; background: #f8fafc !important; }
+
+/* Body */
+.doumi-body {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  padding: 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.doumi-body::-webkit-scrollbar { width: 4px !important; }
+.doumi-body::-webkit-scrollbar-thumb { background: #cbd5e1 !important; border-radius: 2px !important; }
+
+/* Cards */
+.doumi-card {
+  background: #f8fafc !important;
+  border-radius: 8px !important;
+  padding: 10px 12px !important;
+  border-left: 3px solid #94a3b8 !important;
+}
+.doumi-card--blue { border-left-color: #3b82f6 !important; background: #eff6ff !important; }
+.doumi-card__lbl {
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  color: #2563eb !important;
+  text-transform: uppercase !important;
+  margin-bottom: 6px !important;
+}
+.doumi-card__txt { font-size: 13px !important; color: #334155 !important; line-height: 1.55 !important; }
+.doumi-card__txt strong, .doumi-card__txt b { color: #0f172a !important; }
+.doumi-sec { font-size: 11.5px !important; color: #64748b !important; display: block !important; margin-top: 2px !important; }
+
+/* Badge */
+.doumi-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  border-radius: 6px !important;
+  padding: 5px 12px !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  border: 1px solid currentColor !important;
+}
+
+/* List */
+.doumi-list {
+  margin: 0 !important;
+  padding-left: 18px !important;
+  font-size: 13px !important;
+  color: #334155 !important;
+}
+.doumi-list li { margin-bottom: 4px !important; }
+
+/* Safety */
+.doumi-verdict {
+  border-radius: 10px !important;
+  padding: 14px !important;
+  text-align: center !important;
+  margin-bottom: 12px !important;
+  border: 2px solid !important;
+}
+.doumi-verdict--ok   { background: #f0fdf4 !important; border-color: #22c55e !important; }
+.doumi-verdict--bad  { background: #fef2f2 !important; border-color: #ef4444 !important; }
+.doumi-verdict--warn { background: #fffbeb !important; border-color: #f59e0b !important; }
+.doumi-verdict__icon  { font-size: 28px !important; margin-bottom: 6px !important; }
+.doumi-verdict__label { font-size: 14px !important; font-weight: 800 !important; color: #0f172a !important; }
+.doumi-verdict__sub   { font-size: 12px !important; color: #475569 !important; margin-top: 4px !important; }
+
+.doumi-findings { display: flex !important; flex-direction: column !important; gap: 2px !important; }
+.doumi-finding {
+  display: flex !important;
+  gap: 8px !important;
+  align-items: flex-start !important;
+  padding: 5px 0 !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  font-size: 12.5px !important;
+  color: #475569 !important;
+}
+.doumi-finding:last-child { border-bottom: none !important; }
+.doumi-dot {
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 50% !important;
+  flex-shrink: 0 !important;
+  margin-top: 4px !important;
+}
+.doumi-dot--ok   { background: #22c55e !important; }
+.doumi-dot--bad  { background: #ef4444 !important; }
+.doumi-dot--warn { background: #f59e0b !important; }
+
+/* Checklist */
+.doumi-checklist { display: flex !important; flex-direction: column !important; }
+.doumi-ci {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 10px !important;
+  padding: 8px 0 !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+.doumi-ci:last-child { border-bottom: none !important; }
+.doumi-cbox {
+  width: 18px !important;
+  height: 18px !important;
+  border: 2px solid #3b82f6 !important;
+  border-radius: 4px !important;
+  flex-shrink: 0 !important;
+  margin-top: 1px !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 11px !important;
+  color: transparent !important;
+  transition: background 0.15s !important;
+}
+.doumi-cbox--chk {
+  background: #22c55e !important;
+  border-color: #22c55e !important;
+  color: #ffffff !important;
+}
+.doumi-ci__txt { flex: 1 !important; font-size: 13px !important; color: #334155 !important; }
+.doumi-ci__txt--done { text-decoration: line-through !important; color: #94a3b8 !important; }
+
+/* Waiting state */
+.doumi-waiting {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  padding: 32px !important;
+  color: #475569 !important;
+  font-size: 14px !important;
+}
+
+/* Footer */
+.doumi-footer {
+  padding: 8px 14px !important;
+  font-size: 11px !important;
+  color: #94a3b8 !important;
+  border-top: 1px solid #f1f5f9 !important;
+  flex-shrink: 0 !important;
+  text-align: center !important;
+}
