@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>이메일 도우미 — Marketing Minute (YouTube 16:9)</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+#stage {
+  width: 1280px;
+  height: 720px;
+  background: #f8fafc;
+  position: relative;
+  overflow: hidden;
+  transform-origin: center center;
+}
+
+#progress {
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 3px;
+  background: #2563eb;
+  width: 0%;
+  z-index: 100;
+  transition: none;
+}
+
+#slide-counter {
+  position: absolute;
+  bottom: 14px; right: 20px;
+  font-size: 11px;
+  color: #94a3b8;
+  z-index: 99;
+  letter-spacing: 0.08em;
+}
+
+/* ── Slide base ── */
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.7s ease;
+  pointer-events: none;
+}
+.slide.active { opacity: 1; pointer-events: auto; }
+
+/* ── Title slide ── */
+.slide--title {
+  background: radial-gradient(ellipse at 50% 40%, #dbeafe 0%, #f8fafc 70%);
+}
+.title-flag  { font-size: 52px; margin-bottom: 14px; }
+.title-main  { font-size: 74px; font-weight: 900; color: #0f172a; letter-spacing: -2px; line-height: 1; }
+.title-sub   { font-size: 26px; color: #2563eb; margin-top: 14px; font-weight: 400; }
+.title-tag   { font-size: 17px; color: #94a3b8; margin-top: 20px; font-style: italic; }
+
+.slide .title-flag,
+.slide .title-main  { opacity: 0; }
+.slide .title-sub   { opacity: 0; }
+.slide .title-tag   { opacity: 0; }
+.slide.active .title-flag { animation: fadeUp 0.6s 0.1s ease both; }
+.slide.active .title-main { animation: fadeUp 0.6s 0.2s ease both; }
+.slide.active .title-sub  { animation: fadeUp 0.6s 0.4s ease both; }
+.slide.active .title-tag  { animation: fadeUp 0.6s 0.6s ease both; }
+
+/* ── Feature slide ── */
+.slide--feature { padding: 20px 40px 0; justify-content: flex-start; }
+
+/* ── Browser frame ── */
+.browser-frame {
+  width: 1200px;
+  height: 455px;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #cbd5e1;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+.browser-chrome {
+  height: 36px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 8px;
+  flex-shrink: 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+.bd { width: 12px; height: 12px; border-radius: 50%; }
+.bd-r { background: #ff5f56; }
+.bd-y { background: #ffbd2e; }
+.bd-g { background: #27c93f; }
+.browser-url {
+  flex: 1;
+  background: #fff;
+  border-radius: 4px;
+  height: 22px;
+  margin: 0 12px;
+  padding: 0 10px;
+  font-size: 11px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  border: 1px solid #e2e8f0;
+}
+.browser-body { flex: 1; display: flex; overflow: hidden; }
+
+/* ── Email pane ── */
+.email-view {
+  flex: 1;
+  background: #fff;
+  padding: 18px 22px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+.email-subject { font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 6px; line-height: 1.3; }
+.email-from    { font-size: 12px; color: #64748b; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #e2e8f0; }
+.email-from strong { color: #1e293b; }
+.email-body    { font-size: 12.5px; color: #475569; line-height: 1.65; flex: 1; overflow: hidden; }
+.email-body p  { margin-bottom: 9px; }
+.elink         { color: #2563eb; text-decoration: underline; }
+.elink.hl      {
+  outline: 2px solid #3b82f6;
+  border-radius: 3px;
+  background: rgba(59,130,246,0.10);
+  animation: hpulse 1.5s ease-in-out infinite;
+}
+@keyframes hpulse {
+  0%,100% { box-shadow: 0 0 0 2px rgba(59,130,246,0.4); }
+  50%      { box-shadow: 0 0 0 5px rgba(59,130,246,0.12); }
+}
+
+/* Guide tooltip */
+.gt {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #3b82f6;
+  border-radius: 8px;
+  padding: 10px 28px 10px 12px;
+  font-size: 12px;
+  color: #1e293b;
+  line-height: 1.5;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  z-index: 10;
+}
+.gt strong { display: block; margin-bottom: 2px; color: #0f172a; }
+.gt-x { position: absolute; top: 6px; right: 8px; color: #94a3b8; font-size: 11px; }
+
+/* ── Helper panel ── */
+.hp {
+  width: 470px;
+  flex-shrink: 0;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  color: #1e293b;
+  border-left: 1px solid #e2e8f0;
+}
+.hp__hdr {
+  background: #f8fafc;
+  padding: 9px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+.hp__title { font-size: 14px; font-weight: 700; color: #0f172a; }
+.hp__icons { font-size: 13px; color: #94a3b8; display: flex; gap: 8px; }
+.hp__langs {
+  display: flex;
+  padding: 7px 10px;
+  gap: 5px;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.lbtn {
+  padding: 4px 9px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  border: 1px solid #e2e8f0;
+  background: transparent;
+  color: #64748b;
+}
+.lbtn.on { background: #2563eb; border-color: #2563eb; color: #fff; font-weight: 600; }
+.hp__tabs { display: flex; border-bottom: 1px solid #e2e8f0; flex-shrink: 0; }
+.tbtn {
+  flex: 1;
+  padding: 7px 4px;
+  text-align: center;
+  font-size: 12.5px;
+  color: #94a3b8;
+  border-bottom: 2px solid transparent;
+}
+.tbtn.on { color: #2563eb; border-bottom-color: #2563eb; font-weight: 600; }
+.hp__body { flex: 1; overflow: hidden; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+
+/* Cards */
+.pc {
+  background: #eff6ff;
+  border-radius: 8px;
+  padding: 9px 11px;
+  border-left: 3px solid #3b82f6;
+}
+.pc--warn { border-left-color: #f59e0b; background: #fffbeb; }
+.pc--safe { border-left-color: #22c55e; background: #f0fdf4; }
+.pc__lbl  { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; color: #2563eb; text-transform: uppercase; margin-bottom: 5px; }
+.pc__lbl--warn { color: #d97706; }
+.pc__lbl--safe { color: #16a34a; }
+.pc__txt  { font-size: 12.5px; color: #334155; line-height: 1.5; }
+.pc__txt strong { color: #0f172a; }
+
+/* Classifier badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 6px;
+  padding: 5px 11px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #b45309;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Checklist */
+.ci { display: flex; align-items: flex-start; gap: 8px; padding: 7px 0; border-bottom: 1px solid #e2e8f0; }
+.ci:last-child { border-bottom: none; }
+.cbox {
+  width: 17px; height: 17px;
+  border: 2px solid #3b82f6;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  display: flex; align-items: center; justify-content: center;
+}
+.cbox.chk { background: #22c55e; border-color: #22c55e; color: #fff; font-size: 10px; }
+.ci__txt   { flex: 1; font-size: 12.5px; color: #334155; line-height: 1.4; }
+.ci__acts  { display: flex; gap: 5px; margin-top: 3px; }
+.gbtn {
+  padding: 3px 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  background: #eff6ff;
+  border: 1px solid #3b82f6;
+  color: #2563eb;
+}
+.gbtn.on { background: #2563eb; color: #fff; border-color: #2563eb; }
+
+/* Walkthrough bar — intentionally dark for contrast */
+.wbar {
+  background: #0f172a;
+  border-top: 2px solid #3b82f6;
+  padding: 9px 13px;
+  flex-shrink: 0;
+}
+.wbar__hdr { font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; color: #60a5fa; text-transform: uppercase; margin-bottom: 4px; display: flex; justify-content: space-between; }
+.wbar__txt { font-size: 12.5px; color: #e2e8f0; line-height: 1.4; margin-bottom: 9px; }
+.wbar__row { display: flex; gap: 7px; align-items: center; }
+.wb { padding: 5px 11px; border-radius: 6px; font-size: 12px; font-weight: 600; border: none; cursor: pointer; }
+.wb--back  { background: #1e3a5f; color: #94a3b8; }
+.wb--pause { background: #374151; color: #e2e8f0; }
+.wb--go    { background: #22c55e; color: #fff; flex: 1; text-align: center; }
+.wbar__foot { display: flex; justify-content: space-between; margin-top: 7px; }
+.wb--help { background: transparent; border: 1px solid #f59e0b; color: #fbbf24; font-size: 11.5px; padding: 5px 11px; border-radius: 6px; }
+.wb--exit { background: none; border: none; color: #f87171; font-size: 12px; font-weight: 600; }
+
+/* Safety */
+.sv {
+  background: #f0fdf4;
+  border: 2px solid #22c55e;
+  border-radius: 10px;
+  padding: 13px;
+  text-align: center;
+}
+.sv__icon   { font-size: 26px; margin-bottom: 5px; }
+.sv__result { font-size: 15px; font-weight: 800; color: #16a34a; }
+.sv__sub    { font-size: 11px; color: #15803d; margin-top: 3px; }
+.sf { display: flex; gap: 7px; align-items: flex-start; padding: 5px 0; border-bottom: 1px solid #e2e8f0; font-size: 11.5px; color: #475569; }
+.sf:last-child { border-bottom: none; }
+.sfdot { width: 6px; height: 6px; border-radius: 50%; margin-top: 3px; flex-shrink: 0; }
+.sfdot-g { background: #22c55e; }
+.sfdot-b { background: #3b82f6; }
+
+/* ── Feature text ── */
+.ft {
+  padding: 16px 40px 0;
+  text-align: center;
+  flex-shrink: 0;
+}
+.ft__lbl  { font-size: 11.5px; font-weight: 700; letter-spacing: 0.15em; color: #2563eb; text-transform: uppercase; margin-bottom: 6px; }
+.ft__head { font-size: 30px; font-weight: 800; color: #0f172a; line-height: 1.15; margin-bottom: 6px; }
+.ft__desc { font-size: 15px; color: #64748b; line-height: 1.5; max-width: 900px; margin: 0 auto; }
+
+.slide .ft__lbl,
+.slide .ft__head,
+.slide .ft__desc { opacity: 0; }
+.slide.active .ft__lbl  { animation: fadeUp 0.5s 0s   ease both; }
+.slide.active .ft__head { animation: fadeUp 0.5s 0.1s ease both; }
+.slide.active .ft__desc { animation: fadeUp 0.5s 0.2s ease both; }
+
+/* ── Problem slide extra ── */
+.prob-panel {
+  width: 290px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  flex-shrink: 0;
+  border-left: 1px solid #e2e8f0;
+}
+
+/* ── Language card grid ── */
+.lang-grid { display: flex; gap: 9px; }
+.lc {
+  flex: 1;
+  background: #f8fafc;
+  border-radius: 7px;
+  padding: 9px;
+  border-top: 3px solid #3b82f6;
+  border: 1px solid #e2e8f0;
+  border-top-width: 3px;
+}
+.lc__flag { font-size: 16px; margin-bottom: 3px; }
+.lc__name { font-size: 12px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+.lc__samp { font-size: 10.5px; color: #64748b; line-height: 1.4; }
+
+/* ── Closing slide ── */
+.slide--closing {
+  background: radial-gradient(ellipse at 30% 50%, #dbeafe 0%, #f0f9ff 65%);
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 72px;
+  padding: 0 80px;
+}
+.cl-left  { flex: 1; }
+.cl-logo  { font-size: 52px; font-weight: 900; color: #0f172a; line-height: 1.1; margin-bottom: 14px; }
+.cl-tag   { font-size: 21px; color: #2563eb; margin-bottom: 10px; font-weight: 500; }
+.cl-sub   { font-size: 15px; color: #64748b; font-style: italic; }
+.cl-attr  { margin-top: 22px; font-size: 12px; color: #94a3b8; }
+.cl-right { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+.clf {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  background: #fff;
+  border-radius: 10px;
+  border-left: 3px solid #3b82f6;
+  border: 1px solid #e2e8f0;
+  border-left: 3px solid #3b82f6;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  opacity: 0;
+}
+.clf__icon { font-size: 20px; }
+.clf__txt  { font-size: 13.5px; color: #334155; font-weight: 500; }
+.cl-url {
+  position: absolute;
+  bottom: 18px; left: 0; right: 0;
+  text-align: center;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.slide .cl-logo,
+.slide .cl-tag,
+.slide .cl-sub,
+.slide .cl-attr { opacity: 0; }
+.slide.active .cl-logo { animation: fadeUp 0.6s 0.1s ease both; }
+.slide.active .cl-tag  { animation: fadeUp 0.6s 0.25s ease both; }
+.slide.active .cl-sub  { animation: fadeUp 0.6s 0.4s ease both; }
+.slide.active .cl-attr { animation: fadeUp 0.6s 0.55s ease both; }
+.slide.active .clf:nth-child(1) { animation: fadeUp 0.5s 0.2s  ease both; }
+.slide.active .clf:nth-child(2) { animation: fadeUp 0.5s 0.35s ease both; }
+.slide.active .clf:nth-child(3) { animation: fadeUp 0.5s 0.5s  ease both; }
+.slide.active .clf:nth-child(4) { animation: fadeUp 0.5s 0.65s ease both; }
+.slide.active .clf:nth-child(5) { animation: fadeUp 0.5s 0.8s  ease both; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+<div id="stage">
+<div id="progress"></div>
+<div id="slide-counter"></div>
+
+<!-- ═══════════════ SLIDE 1 — Title (5s) ═══════════════ -->
+<div class="slide slide--title" data-dur="5000">
+  <div class="title-flag">🇰🇷</div>
+  <div class="title-main">이메일 도우미</div>
+  <div class="title-sub">Email Assistant for Mom</div>
+  <div class="title-tag">"When important emails are impossible to ignore."</div>
+</div>
+
+<!-- ═══════════════ SLIDE 2 — The Problem (9s) ═══════════════ -->
+<div class="slide slide--feature" data-dur="9000">
+  <div class="browser-frame">
+    <div class="browser-chrome">
+      <div class="bd bd-r"></div><div class="bd bd-y"></div><div class="bd bd-g"></div>
+      <div class="browser-url">mail.google.com</div>
+    </div>
+    <div class="browser-body">
+      <div class="email-view">
+        <div class="email-subject">Quick Reminder: Your Driver's License/ID/Permit will expire soon!</div>
+        <div class="email-from"><strong>Georgia Department of Driver Services</strong> &lt;NoReply@drives.ga.gov&gt; · to me</div>
+        <div class="email-body">
+          <p>This is an official communication sent to you by the Georgia Department of Driver Services regarding your online services.</p>
+          <p>Quick Reminder: Your Driver's License/ID/Permit will expire soon!</p>
+          <p>Upgrading your license is easy and only takes a few minutes via the DDS website or Mobile App: DDS 2 GO</p>
+          <p>Most non-commercial licenses and IDs cost <strong>$32.00</strong> for an eight year term.</p>
+          <p style="color:#9ca3af;font-size:11px;">Please do not respond to this email directly. To ensure delivery of future emails, please add NoReply@drives.ga.gov to your address book or approved senders list.</p>
+        </div>
+        <div style="position:absolute;bottom:16px;right:16px;background:#fef3c7;border:1px solid #f59e0b;border-radius:8px;padding:8px 12px;font-size:12px;color:#92400e;max-width:220px;text-align:center;line-height:1.4;">
+          ❓ 이게 무슨 뜻이야?<br><span style="font-size:11px;color:#b45309;">What do I do? Is this safe?</span>
+        </div>
+      </div>
+      <div class="prob-panel">
+        <div style="text-align:center;">
+          <div style="font-size:38px;margin-bottom:10px;">😰</div>
+          <div style="font-size:13px;color:#64748b;line-height:1.6;">Official emails.<br>Unknown actions.<br>Real consequences.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ft">
+    <div class="ft__lbl">The Problem</div>
+    <div class="ft__head">Important emails. No idea what to do next.</div>
+    <div class="ft__desc">Mom can partially translate English — but can't determine what action to take, what's urgent, or whether the email is even legitimate.</div>
+  </div>
+</div>
+
+<!-- ═══════════════ SLIDE 3 — Summary (8s) ═══════════════ -->
+<div class="slide slide--feature" data-dur="8000">
+  <div class="browser-frame">
+    <div class="browser-chrome">
+      <div class="bd bd-r"></div><div class="bd bd-y"></div><div class="bd bd-g"></div>
+      <div class="browser-url">euginahan.github.io/PersonsRequired_Claude</div>
+    </div>
+    <div class="browser-body">
+      <div class="email-view">
+        <div class="email-subject">Quick Reminder: Your Driver's License/ID/Permit will expire soon!</div>
+        <div class="email-from"><strong>Georgia Department of Driver Services</strong> &lt;NoReply@drives.ga.gov&gt;</div>
+        <div class="email-body">
+          <p>This is an official communication sent to you by the Georgia Department of Driver Services.</p>
+          <p>Upgrading your license is easy and only takes a few minutes via the <span class="elink">DDS website</span> or Mobile App.</p>
+          <p>Most non-commercial licenses cost <strong>$32.00</strong> for an eight year term.</p>
+        </div>
+      </div>
+      <div class="hp">
+        <div class="hp__hdr"><div class="hp__title">🇰🇷 이메일 도우미</div><div class="hp__icons">🔔 ⚙ —</div></div>
+        <div class="hp__langs">
+          <div class="lbtn">한국어</div><div class="lbtn on">English</div><div class="lbtn">둘 다</div><div class="lbtn">쉬운 English</div>
+        </div>
+        <div class="hp__tabs">
+          <div class="tbtn on">Summary</div><div class="tbtn">Safety</div><div class="tbtn">Reply</div><div class="tbtn">Ask</div>
+        </div>
+        <div class="hp__body">
+          <div><div class="badge">⚠️ Renewal Notice · Official</div></div>
+          <div class="pc">
+            <div class="pc__lbl">What is this email?</div>
+            <div class="pc__txt">Your <strong>Georgia driver's license expires soon.</strong> You must renew or you can't drive legally. Renew online — costs $32, takes a few minutes.</div>
+          </div>
+          <div class="pc pc--warn">
+            <div class="pc__lbl pc__lbl--warn">🔑 Key Details</div>
+            <div class="pc__txt" style="font-size:12px;">
+              <div>• Renewal cost: <strong style="color:#fbbf24;">$32.00</strong></div>
+              <div>• Valid for: <strong>8 years</strong></div>
+              <div>• Website: <strong>dds.drives.ga.gov</strong></div>
+              <div>• App: <strong>DDS 2 GO</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ft">
+    <div class="ft__lbl">Feature 1 — Instant Clarity</div>
+    <div class="ft__head">Know exactly what it means — and what it costs.</div>
+    <div class="ft__desc">The Summary tab classifies the email type and translates bureaucratic language into plain, actionable facts — in seconds.</div>
+  </div>
+</div>
+
+<!-- ═══════════════ SLIDE 4 — Action Checklist (9s) ═══════════════ -->
+<div class="slide slide--feature" data-dur="9000">
+  <div class="browser-frame">
+    <div class="browser-chrome">
+      <div class="bd bd-r"></div><div class="bd bd-y"></div><div class="bd bd-g"></div>
+      <div class="browser-url">euginahan.github.io/PersonsRequired_Claude</div>
+    </div>
+    <div class="browser-body">
+      <div class="email-view">
+        <div class="email-subject">Quick Reminder: Your Driver's License/ID/Permit will expire soon!</div>
+        <div class="email-from"><strong>Georgia Department of Driver Services</strong></div>
+        <div class="email-body">
+          <p>Upgrading your license is easy and only takes a few minutes via the DDS website or Mobile App.</p>
+          <p>Schedule an appointment at <span class="elink hl">https://dds.drives.ga.gov/</span></p>
+          <p>Most licenses cost $32.00 for an eight year term.</p>
+        </div>
+        <div class="gt" style="top:130px;left:26px;">
+          <strong>This is the DDS website link</strong>
+          Click it to go to the renewal page
+          <span class="gt-x">✕</span>
+        </div>
+      </div>
+      <div class="hp">
+        <div class="hp__hdr"><div class="hp__title">🇰🇷 이메일 도우미</div><div class="hp__icons">🔔 ⚙ —</div></div>
+        <div class="hp__langs">
+          <div class="lbtn">한국어</div><div class="lbtn on">English</div><div class="lbtn">둘 다</div><div class="lbtn">쉬운 English</div>
+        </div>
+        <div class="hp__tabs">
+          <div class="tbtn on">Summary</div><div class="tbtn">Safety</div><div class="tbtn">Reply</div><div class="tbtn">Ask</div>
+        </div>
+        <div class="hp__body">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:.08em;color:#60a5fa;text-transform:uppercase;">✅ Action Steps</div>
+            <div style="padding:3px 9px;border-radius:20px;font-size:11px;background:#22c55e;color:#fff;font-weight:600;">▶ In progress...</div>
+          </div>
+          <div style="background:#f8fafc;border-radius:8px;padding:8px 10px;border:1px solid #e2e8f0;">
+            <div class="ci">
+              <div class="cbox"></div>
+              <div>
+                <div class="ci__txt">Go to DDS website</div>
+                <div class="ci__acts"><div class="gbtn on">Show me where</div><div class="gbtn">Why?</div></div>
+              </div>
+            </div>
+            <div class="ci">
+              <div class="cbox"></div>
+              <div class="ci__txt">Complete renewal application</div>
+            </div>
+            <div class="ci">
+              <div class="cbox"></div>
+              <div class="ci__txt">Pay $32.00 online</div>
+            </div>
+            <div class="ci" style="border-bottom:none;">
+              <div class="cbox"></div>
+              <div class="ci__txt">Wait for new license (7–10 days)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ft">
+    <div class="ft__lbl">Feature 2 — Guided Actions</div>
+    <div class="ft__head">"Show me where" highlights exactly what to look for.</div>
+    <div class="ft__desc">Each action step spotlights the relevant part of the email — no searching, no guessing where to click.</div>
+  </div>
+</div>
+
+<!-- ═══════════════ SLIDE 5 — Walkthrough (8s) ═══════════════ -->
+<div class="slide slide--feature" data-dur="8000">
+  <div class="browser-frame">
+    <div class="browser-chrome">
+      <div class="bd bd-r"></div><div class="bd bd-y"></div><div class="bd bd-g"></div>
+      <div class="browser-url">euginahan.github.io/PersonsRequired_Claude</div>
+    </div>
+    <div class="browser-body">
+      <div class="email-view">
+        <div class="email-subject">Quick Reminder: Your Driver's License/ID/Permit will expire soon!</div>
+        <div class="email-from"><strong>Georgia Department of Driver Services</strong></div>
+        <div class="email-body">
+          <p>You can visit a Customer Service Center or schedule an appointment via our website at <span class="elink hl">https://dds.drives.ga.gov/</span></p>
+          <p>Most non-commercial licenses and IDs cost $32.00 for an eight year term.</p>
+          <p>You can also use the DDS 2 GO mobile app on your smartphone.</p>
+        </div>
+      </div>
+      <div class="hp" style="display:flex;flex-direction:column;">
+        <div class="hp__hdr"><div class="hp__title">🇰🇷 이메일 도우미</div><div class="hp__icons">🔔 ⚙ —</div></div>
+        <div class="hp__langs">
+          <div class="lbtn">한국어</div><div class="lbtn on">English</div><div class="lbtn">둘 다</div><div class="lbtn">쉬운 English</div>
+        </div>
+        <div class="hp__tabs">
+          <div class="tbtn on">Summary</div><div class="tbtn">Safety</div><div class="tbtn">Reply</div><div class="tbtn">Ask</div>
+        </div>
+        <div class="hp__body" style="flex:1;">
+          <div class="pc">
+            <div class="pc__txt" style="font-size:12px;color:#94a3b8;">Walkthrough active — Step 1 of 4 · License Renewal</div>
+          </div>
+        </div>
+        <div class="wbar">
+          <div class="wbar__hdr"><span>LICENSE RENEWAL WALKTHROUGH</span><span>1 / 4</span></div>
+          <div class="wbar__txt">Find the dds.drives.ga.gov link in the email. It is highlighted in blue.</div>
+          <div class="wbar__row">
+            <div class="wb wb--back">← Back</div>
+            <div class="wb wb--pause">Pause</div>
+            <div class="wb wb--go">I found the link</div>
+          </div>
+          <div class="wbar__foot">
+            <div class="wb wb--help">I Need More Help</div>
+            <div class="wb wb--exit">Exit</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ft">
+    <div class="ft__lbl">Feature 3 — Guided Walkthrough</div>
+    <div class="ft__head">Step-by-step. At her pace. With help when she needs it.</div>
+    <div class="ft__desc">Walkthrough mode breaks complex tasks into 4 clear steps — with "I Need More Help" escalation when things get confusing.</div>
+  </div>
+</div>
+
+<!-- ═══════════════ SLIDE 6 — Language Modes (7s) ═══════════════ -->
+<div class="slide slide--feature" data-dur="7000">
+  <div class="browser-frame">
+    <div class="browser-chrome">
+      <div class="bd bd-r"></div><div class="bd bd-y"></div><div class="bd bd-g"></div>
+      <div class="browser-url">euginahan.github.io/PersonsRequired_Claude</div>
+    </div>
+    <div class="browser-body">
+      <div class="email-view">
+        <div class="email-subject">Quick Reminder: Your Driver's License/ID/Permit will expire soon!</div>
+        <div class="email-from"><strong>Georgia Department of Driver Services</strong></div>
+        <div class="email-body">
+          <p>Upgrading your license is easy and only takes a few minutes via the DDS website.</p>
+        </div>
+      </div>
+      <div class="hp">
+        <div class="hp__hdr"><div class="hp__title">🇰🇷 이메일 도우미</div><div class="hp__icons">🔔 ⚙ —</div></div>
+        <div class="hp__langs">
+          <div class="lbtn on">한국어</div><div class="lbtn">English</div><div class="lbtn">둘 다</div><div class="lbtn">쉬운 English</div>
+        </div>
+        <div class="hp__tabs">
+          <div class="tbtn on">요약</div><div class="tbtn">안전</div><div class="tbtn">답장</div><div class="tbtn">질문</div>
+        </div>
+        <div class="hp__body">
+          <div class="pc">
+            <div class="pc__lbl">이 이메일은 무엇인가요?</div>
+            <div class="pc__txt">조지아 운전면허증이 곧 만료됩니다. 갱신하지 않으면 합법적으로 운전할 수 없습니다. 온라인으로 갱신할 수 있으며 <strong style="color:#fbbf24;">비용은 $32</strong>입니다.</div>
+          </div>
+          <div class="lang-grid">
+            <div class="lc"><div class="lc__flag">🇰🇷</div><div class="lc__name">한국어</div><div class="lc__samp">전체 한국어</div></div>
+            <div class="lc"><div class="lc__flag">🇺🇸</div><div class="lc__name">English</div><div class="lc__samp">Full English</div></div>
+            <div class="lc" style="border-top-color:#22c55e;"><div class="lc__flag">🌐</div><div class="lc__name">둘 다</div><div class="lc__samp">Both side by side</div></div>
+            <div class="lc" style="border-top-color:#f59e0b;"><div class="lc__flag">📖</div><div class="lc__name">쉬운 English</div><div class="lc__samp">Simple words</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ft">
+    <div class="ft__lbl">Feature 4 — Language Modes</div>
+    <div class="ft__head">한국어, English, 둘 다 — whatever feels most comfortable.</div>
+    <div class="ft__desc">Four reading modes including side-by-side bilingual and simplified English, for immigrant users at any level of comfort.</div>
+  </div>
+</div>
+
+<!-- ═══════════════ SLIDE 7 — Safety Check (7s) ═══════════════ -->
+<div class="slide slide--feature" data-dur="7000">
+  <div class="browser-frame">
+    <div class="browser-chrome">
+      <div class="bd bd-r"></div><div class="bd bd-y"></div><div class="bd bd-g"></div>
+      <div class="browser-url">euginahan.github.io/PersonsRequired_Claude</div>
+    </div>
+    <div class="browser-body">
+      <div class="email-view">
+        <div class="email-subject">Quick Reminder: Your Driver's License/ID/Permit will expire soon!</div>
+        <div class="email-from"><strong>Georgia Department of Driver Services</strong> &lt;NoReply@drives.ga.gov&gt;</div>
+        <div class="email-body">
+          <p>This is an official communication from the Georgia Department of Driver Services.</p>
+          <p>Schedule an appointment at <span class="elink">https://dds.drives.ga.gov/</span></p>
+        </div>
+      </div>
+      <div class="hp">
+        <div class="hp__hdr"><div class="hp__title">🇰🇷 이메일 도우미</div><div class="hp__icons">🔔 ⚙ —</div></div>
+        <div class="hp__langs">
+          <div class="lbtn">한국어</div><div class="lbtn on">English</div><div class="lbtn">둘 다</div><div class="lbtn">쉬운 English</div>
+        </div>
+        <div class="hp__tabs">
+          <div class="tbtn">Summary</div><div class="tbtn on">Safety</div><div class="tbtn">Reply</div><div class="tbtn">Ask</div>
+        </div>
+        <div class="hp__body">
+          <div class="sv">
+            <div class="sv__icon">✅</div>
+            <div class="sv__result">THIS EMAIL IS SAFE</div>
+            <div class="sv__sub">Official Georgia government communication</div>
+          </div>
+          <div style="margin-top:6px;">
+            <div class="sf"><div class="sfdot sfdot-g"></div><span>Sent from official Georgia DDS mail server</span></div>
+            <div class="sf"><div class="sfdot sfdot-g"></div><span>Link leads to official state website (dds.drives.ga.gov)</span></div>
+            <div class="sf"><div class="sfdot sfdot-b"></div><span>No payment info requested in the email itself</span></div>
+            <div class="sf"><div class="sfdot sfdot-g"></div><span>No urgency pressure tactics detected</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ft">
+    <div class="ft__lbl">Feature 5 — Safety Check</div>
+    <div class="ft__head">Is this email safe to act on? Know instantly.</div>
+    <div class="ft__desc">Built-in scam detection analyzes sender, links, and language patterns — giving a clear SAFE or SUSPICIOUS verdict before any action is taken.</div>
+  </div>
+</div>
+
+<!-- ═══════════════ SLIDE 8 — Closing (7s) ═══════════════ -->
+<div class="slide slide--closing" data-dur="7000">
+  <div class="cl-left">
+    <div style="font-size:44px;margin-bottom:10px;">🇰🇷</div>
+    <div class="cl-logo">이메일 도우미</div>
+    <div class="cl-tag">Important emails, made understandable.</div>
+    <div class="cl-sub">Built for Mom. By her child.</div>
+    <div class="cl-attr">SCAD AI 201 · Project 3 · 2026</div>
+  </div>
+  <div class="cl-right">
+    <div class="clf"><div class="clf__icon">📋</div><div class="clf__txt">Instant classification + bilingual summary</div></div>
+    <div class="clf"><div class="clf__icon">🎯</div><div class="clf__txt">"Show me where" spotlight guidance</div></div>
+    <div class="clf"><div class="clf__icon">🚶</div><div class="clf__txt">Step-by-step walkthrough + escalation support</div></div>
+    <div class="clf"><div class="clf__icon">🌐</div><div class="clf__txt">4 language modes including 쉬운 English</div></div>
+    <div class="clf"><div class="clf__icon">🛡️</div><div class="clf__txt">Built-in scam detection & safety verdicts</div></div>
+  </div>
+  <div class="cl-url">euginahan.github.io/PersonsRequired_Claude</div>
+</div>
+
+</div><!-- #stage -->
+
+<script>
+// Scale to fill viewport while preserving 16:9
+function scale() {
+  const s = document.getElementById('stage')
+  const r = Math.min(window.innerWidth / 1280, window.innerHeight / 720)
+  s.style.transform = `scale(${r})`
+}
+window.addEventListener('resize', scale)
+scale()
+
+// Slide timing
+const slides = [...document.querySelectorAll('.slide')]
+const DURS   = slides.map(s => +s.dataset.dur)
+const TOTAL  = DURS.reduce((a, b) => a + b, 0) // 60000
+const CUM    = DURS.reduce((acc, d) => { acc.push((acc.at(-1) || 0) + d); return acc }, [])
+
+const bar     = document.getElementById('progress')
+const counter = document.getElementById('slide-counter')
+let current   = 0
+let startTs   = null
+let elapsed   = 0
+let paused    = false
+let raf       = null
+
+function activate(idx) {
+  if (idx === current && slides[idx].classList.contains('active')) return
+  slides[current].classList.remove('active')
+  current = idx
+  // Force animation restart
+  slides[current].classList.remove('active')
+  void slides[current].offsetWidth
+  slides[current].classList.add('active')
+  counter.textContent = `${current + 1} / ${slides.length}`
+}
+
+function tick(ts) {
+  if (!startTs) startTs = ts
+  elapsed = ts - startTs
+
+  if (elapsed >= TOTAL) {
+    elapsed = 0
+    startTs = ts
+  }
+
+  bar.style.width = (elapsed / TOTAL * 100) + '%'
+
+  const target = CUM.findIndex(t => elapsed < t)
+  const next   = target === -1 ? slides.length - 1 : target
+  if (next !== current) activate(next)
+
+  raf = requestAnimationFrame(tick)
+}
+
+// Start
+activate(0)
+setTimeout(() => { raf = requestAnimationFrame(tick) }, 600)
+
+// Keyboard controls
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space') {
+    e.preventDefault()
+    if (paused) {
+      paused = false
+      startTs = performance.now() - elapsed
+      raf = requestAnimationFrame(tick)
+    } else {
+      paused = true
+      cancelAnimationFrame(raf)
+    }
+  }
+  if (e.code === 'ArrowRight') {
+    const next = Math.min(current + 1, slides.length - 1)
+    elapsed = CUM[next - 1] || 0
+    startTs = performance.now() - elapsed
+    activate(next)
+  }
+  if (e.code === 'ArrowLeft') {
+    const prev = Math.max(current - 1, 0)
+    elapsed = CUM[prev - 1] || 0
+    startTs = performance.now() - elapsed
+    activate(prev)
+  }
+})
+</script>
+</body>
+</html>
